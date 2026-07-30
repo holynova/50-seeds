@@ -1,7 +1,7 @@
 # 50 Seeds
 
-24 类 × 50 条，共 1,200 条 AI 作图种子。支持搜索、筛选、复制与 JSON 下载。
+48×50 条双语 AI 作图种子。
 
-[Demo](https://holynova.github.io/50-seeds/) · [Repo](https://github.com/holynova/50-seeds)
+[网页](https://holynova.github.io/50-seeds/) · [仓库](https://github.com/holynova/50-seeds)
 
-![Screenshot](assets/screenshot.png)
+![图](assets/screenshot.png)

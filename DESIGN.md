@@ -36,7 +36,7 @@ Depth comes from background lightness steps, never glass blur or generic card sh
 - Do use tabular numerals for rank and counts.
 - Do explain that popularity is an editorial snapshot.
 - Don't use gradients, glass effects, or purple-blue AI colors.
-- Don't render all 1,200 records on first paint.
+- Don't render all 2,400 records on first paint.
 - Don't hide focus states or rely on hover alone.
 
 ## 8. Responsive behavior

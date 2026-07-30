@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { catalog } from "../src/catalog.mjs";
+import { extraCatalog } from "../src/catalog-extra.mjs";
 
 const snapshotDate = "2026-07-31";
 const sources = [
@@ -7,10 +8,12 @@ const sources = [
   { name: "Steam Charts", url: "https://store.steampowered.com/stats/", scope: "游戏" },
   { name: "Best-selling manga", url: "https://en.wikipedia.org/wiki/List_of_best-selling_manga", scope: "日本漫画" },
   { name: "Billboard Greatest Pop Stars", url: "https://www.billboard.com/lists/best-pop-stars-21st-century/", scope: "歌手" },
+  { name: "MoMA Art Terms", url: "https://www.moma.org/collection/terms/", scope: "艺术流派、媒介与摄影" },
+  { name: "NASA Solar System Exploration", url: "https://science.nasa.gov/solar-system/", scope: "宇宙天体" },
   { name: "Wikimedia Pageviews", url: "https://pageviews.wmcloud.org/", scope: "跨类别公众可见度" }
 ];
 
-const categories = Object.entries(catalog).map(([key, category]) => {
+const categories = Object.entries({ ...catalog, ...extraCatalog }).map(([key, category]) => {
   const seeds = category.items.map(({ name, englishName }, index) => ({
     id: `${key}-${String(index + 1).padStart(2, "0")}`,
     category: key,

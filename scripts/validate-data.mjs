@@ -4,8 +4,8 @@ const payload = JSON.parse(await readFile(new URL("../data/seeds.json", import.m
 const requiredFields = ["name", "englishName", "style", "englishStyle", "priority"];
 const errors = [];
 
-if (payload.meta.categoryCount !== 24) errors.push(`Expected 24 categories, got ${payload.meta.categoryCount}`);
-if (payload.meta.seedCount !== 1200) errors.push(`Expected 1200 seeds, got ${payload.meta.seedCount}`);
+if (payload.meta.categoryCount !== 48) errors.push(`Expected 48 categories, got ${payload.meta.categoryCount}`);
+if (payload.meta.seedCount !== 2400) errors.push(`Expected 2400 seeds, got ${payload.meta.seedCount}`);
 
 for (const category of payload.categories) {
   if (category.count !== 50 || category.seeds.length !== 50) {
@@ -24,10 +24,11 @@ for (const category of payload.categories) {
   });
 }
 
-const [html, app, css] = await Promise.all([
+const [html, app, css, readme] = await Promise.all([
   readFile(new URL("../index.html", import.meta.url), "utf8"),
   readFile(new URL("../app.js", import.meta.url), "utf8"),
-  readFile(new URL("../styles.css", import.meta.url), "utf8")
+  readFile(new URL("../styles.css", import.meta.url), "utf8"),
+  readFile(new URL("../README.md", import.meta.url), "utf8")
 ]);
 
 for (const marker of ["data/seeds.json", "github.com/holynova/50-seeds", "id=\"search-input\"", "id=\"category-list\""]) {
@@ -35,6 +36,7 @@ for (const marker of ["data/seeds.json", "github.com/holynova/50-seeds", "id=\"s
 }
 if (!app.includes("fetch(\"./data/seeds.json\")")) errors.push("app.js: data fetch path is missing");
 if (!css.includes("@media (max-width: 820px)")) errors.push("styles.css: responsive breakpoint is missing");
+if ([...readme].length > 200) errors.push(`README.md: expected at most 200 characters, got ${[...readme].length}`);
 
 if (errors.length) {
   console.error(errors.join("\n"));
