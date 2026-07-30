@@ -1,0 +1,20 @@
+{
+  "name": "50-seeds",
+  "version": "1.0.0",
+  "private": true,
+  "description": "24 categories of popular visual seeds for AI image creation",
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate-data.mjs",
+    "validate": "node scripts/validate-data.mjs",
+    "test": "npm run generate && npm run validate",
+    "start": "npx --yes serve . -l 4173"
+  },
+  "keywords": [
+    "ai-art",
+    "prompt",
+    "visual-seeds",
+    "json"
+  ],
+  "license": "MIT"
+}

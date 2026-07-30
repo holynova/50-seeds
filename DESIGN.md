@@ -1,0 +1,51 @@
+# 50 Seeds design system
+
+## 1. Visual theme and atmosphere
+
+Darkroom index: a warm-black, high-density visual archive with vermilion editorial marks. It should feel like a working reference desk for image makers, not a marketing landing page.
+
+## 2. Color palette and roles
+
+- Canvas: `oklch(16% 0.012 55)`, page background.
+- Surface: `oklch(21% 0.014 55)`, controls and active rows.
+- Paper: `oklch(91% 0.022 75)`, primary text.
+- Muted ink: `oklch(69% 0.018 70)`, metadata.
+- Vermilion: `oklch(65% 0.19 35)`, active state and actions.
+- Hairline: `oklch(93% 0.01 75 / 12%)`, separators.
+
+## 3. Typography rules
+
+Display uses `Avenir Next Condensed` with PingFang fallbacks for a narrow archive-label rhythm. Body uses the native system stack for fast mixed Chinese and English rendering. Large Latin numerals use negative tracking, Chinese text never does. Body line-height is 1.7.
+
+## 4. Component styling
+
+Buttons and filters use 2px, 6px, 12px, and pill as the fixed radius scale. Controls sit on stepped dark surfaces with hairline separators. Records are ledger rows, not floating cards. Hover changes surface and translation by 2px; press scales to 0.97. Focus uses a 2px vermilion outline.
+
+## 5. Layout principles
+
+Desktop uses a sticky 260px category index and a fluid result ledger. The first screen is asymmetric: a large `50` mark anchors the left while the purpose and controls occupy the right. Spacing follows 4, 8, 12, 16, 24, 32, and 48px.
+
+## 6. Depth and elevation
+
+Depth comes from background lightness steps, never glass blur or generic card shadows. The sticky toolbar uses a solid canvas color so content never bleeds through.
+
+## 7. Do and don't
+
+- Do keep result actions next to the exact seed they affect.
+- Do preserve bilingual names and prompts.
+- Do use tabular numerals for rank and counts.
+- Do explain that popularity is an editorial snapshot.
+- Don't use gradients, glass effects, or purple-blue AI colors.
+- Don't render all 1,200 records on first paint.
+- Don't hide focus states or rely on hover alone.
+
+## 8. Responsive behavior
+
+Below 820px the category index becomes a horizontal, scrollable filter strip. The hero numeral becomes smaller, controls stack, and record columns collapse. Touch targets remain at least 40px. The layout is verified at 1280px, 375px, and 320px.
+
+## 9. Agent prompt guide
+
+- Canvas `oklch(16% 0.012 55)`, paper `oklch(91% 0.022 75)`, accent `oklch(65% 0.19 35)`.
+- Create a ledger row with rank at 12px tabular, title at 22px weight 650, bilingual body at 14px and 1.7 line-height, 12px vertical padding, 1px hairline divider.
+- Create an active category pill with 42px minimum height, 999px radius, vermilion fill, near-black text, and 0.97 press scale.
+- Create a search field on the stepped surface, 48px high, 6px radius, 1px hairline outline, and 2px vermilion focus ring.

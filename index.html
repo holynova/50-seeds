@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#211d19">
+    <meta name="description" content="24 类、1,200 条 AI 作图热门视觉种子，支持搜索、筛选、复制与 JSON 下载。">
+    <meta property="og:title" content="50 Seeds · AI 作图视觉种子库">
+    <meta property="og:description" content="每类 50 条，24 类共 1,200 条热门视觉种子。">
+    <meta property="og:type" content="website">
+    <title>50 Seeds · AI 作图视觉种子库</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23100d0b'/%3E%3Ctext x='8' y='47' font-size='42' font-family='Arial' font-weight='800' fill='%23f35432'%3E50%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="./styles.css">
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#results">跳到结果</a>
+    <header class="masthead">
+      <a class="brand" href="./" aria-label="50 Seeds 首页">
+        <span class="brand-mark" aria-hidden="true">50</span>
+        <span class="brand-copy"><b>SEEDS</b><small>VISUAL INDEX / 2026</small></span>
+      </a>
+      <a class="repo-link" href="https://github.com/holynova/50-seeds" target="_blank" rel="noreferrer">
+        GitHub repo <span aria-hidden="true">↗</span>
+      </a>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-number" aria-hidden="true">50<span>×24</span></div>
+        <div class="intro-copy">
+          <p class="eyebrow">AI IMAGE-MAKING SEED ARCHIVE</p>
+          <h1 id="page-title">给画面一个<br><em>更好的起点。</em></h1>
+          <p class="lede">从艺术家、电影与角色，到构图、城市和自然现象。24 个分类，每类 50 条，中英双语，可直接搜索、复制或下载 JSON。</p>
+          <div class="stats" aria-label="数据统计">
+            <span><strong id="seed-stat">1,200</strong> 种子</span>
+            <span><strong id="category-stat">24</strong> 分类</span>
+            <span><strong>2026.07</strong> 快照</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="种子筛选器">
+        <aside class="category-panel" aria-labelledby="category-heading">
+          <div class="panel-heading">
+            <h2 id="category-heading">分类索引</h2>
+            <span id="category-counter">24</span>
+          </div>
+          <nav id="category-list" class="category-list" aria-label="选择种子分类"></nav>
+        </aside>
+
+        <div class="results-panel">
+          <div class="toolbar">
+            <label class="search-box">
+              <span class="visually-hidden">搜索种子</span>
+              <span aria-hidden="true">⌕</span>
+              <input id="search-input" type="search" autocomplete="off" placeholder="搜索名称、英文名或描述…">
+              <kbd>/</kbd>
+            </label>
+            <div class="toolbar-row">
+              <label class="select-wrap">
+                <span class="visually-hidden">排序方式</span>
+                <select id="sort-select">
+                  <option value="priority">热度优先</option>
+                  <option value="name">中文名称</option>
+                  <option value="englishName">English A–Z</option>
+                </select>
+              </label>
+              <div class="language-toggle" aria-label="描述语言">
+                <button type="button" data-language="both" class="is-active" aria-pressed="true">双语</button>
+                <button type="button" data-language="zh" aria-pressed="false">中文</button>
+                <button type="button" data-language="en" aria-pressed="false">EN</button>
+              </div>
+              <a class="download-link" href="./data/seeds.json" download>下载 JSON <span aria-hidden="true">↓</span></a>
+            </div>
+          </div>
+
+          <div class="result-heading">
+            <div>
+              <p class="eyebrow" id="active-category-en">ALL CATEGORIES</p>
+              <h2 id="active-category">全部种子</h2>
+            </div>
+            <p><strong id="result-count">0</strong> 条结果</p>
+          </div>
+
+          <div id="status" class="status" role="status" aria-live="polite">正在载入种子库…</div>
+          <ol id="results" class="seed-list" aria-label="筛选结果"></ol>
+          <button id="load-more" class="load-more" type="button" hidden>继续载入 <span aria-hidden="true">↓</span></button>
+        </div>
+      </section>
+
+      <section class="methodology" aria-labelledby="method-title">
+        <p class="eyebrow">RANKING NOTE</p>
+        <h2 id="method-title">热度是导航，不是定论。</h2>
+        <p>priority 在每个分类内从 1 排到 50。排序综合当前关注、主流榜单、长期文化影响与 AI 作图适用性，是 2026-07-31 的编辑型快照，并非单一平台的实时官方统计。</p>
+        <div id="source-links" class="source-links" aria-label="参考来源"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>50 Seeds · Built for image makers.</p>
+      <div><a href="./data/seeds.json">Raw JSON</a><a href="https://github.com/holynova/50-seeds">GitHub</a></div>
+    </footer>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
