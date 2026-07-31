@@ -4,10 +4,10 @@ const state = {
   search: "",
   sort: "priority",
   language: "both",
-  visible: 72
+  visible: 120
 };
 
-const pageSize = 72;
+const pageSize = 120;
 const elements = {
   categoryList: document.querySelector("#category-list"),
   categoryCounter: document.querySelector("#category-counter"),
@@ -68,21 +68,20 @@ function renderCategories() {
 function resultMarkup(seed) {
   const showZh = state.language !== "en";
   const showEn = state.language !== "zh";
+  const hasLongName = seed.name.length > 12 || seed.englishName.length > 28;
   return `
     <li class="seed-item" data-seed-id="${seed.id}">
-      <span class="rank" aria-label="分类内热度排名 ${seed.priority}">${String(seed.priority).padStart(2, "0")}</span>
-      <div class="seed-content">
-        <div class="seed-title">
+      <button type="button" class="seed-tile${hasLongName ? " has-long-name" : ""}" data-copy="${seed.id}" aria-label="复制 ${escapeHtml(seed.name)} 的完整双语提示词">
+        <span class="seed-meta">
+          <span class="rank" aria-label="分类内热度排名 ${seed.priority}">${String(seed.priority).padStart(2, "0")}</span>
           <span class="seed-category">${escapeHtml(seed.categoryName)}</span>
-          <h3>${escapeHtml(seed.name)}</h3>
-          <p lang="en">${escapeHtml(seed.englishName)}</p>
-        </div>
-        <div class="seed-description">
-          ${showZh ? `<p lang="zh-CN">${escapeHtml(seed.style)}</p>` : ""}
-          ${showEn ? `<p lang="en">${escapeHtml(seed.englishStyle)}</p>` : ""}
-        </div>
-      </div>
-      <button type="button" class="copy-button" data-copy="${seed.id}" aria-label="复制 ${escapeHtml(seed.name)} 的双语提示词">复制</button>
+        </span>
+        <span class="seed-name">
+          ${showZh ? `<strong lang="zh-CN">${escapeHtml(seed.name)}</strong>` : ""}
+          ${showEn ? `<span lang="en">${escapeHtml(seed.englishName)}</span>` : ""}
+        </span>
+        <span class="copy-cue"><span>复制提示词</span><span aria-hidden="true">↗</span></span>
+      </button>
     </li>
   `;
 }

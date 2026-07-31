@@ -19,11 +19,11 @@ Display uses `Avenir Next Condensed` with PingFang fallbacks for a narrow archiv
 
 ## 4. Component styling
 
-Buttons and filters use 2px, 6px, 12px, and pill as the fixed radius scale. Controls sit on stepped dark surfaces with hairline separators. Records are ledger rows, not floating cards. Hover changes surface and translation by 2px; press scales to 0.97. Focus uses a 2px vermilion outline.
+Buttons and filters use 2px, 6px, 12px, and pill as the fixed radius scale. Controls sit on stepped dark surfaces with hairline separators. Records are compact square index tiles in a responsive grid, with the entire tile acting as the copy action. Hover changes border, surface, and translation by 2px; press scales to 0.97. Focus uses a 2px vermilion outline.
 
 ## 5. Layout principles
 
-Desktop uses a sticky 260px category index and a fluid result ledger. The first screen is asymmetric: a large `50` mark anchors the left while the purpose and controls occupy the right. Spacing follows 4, 8, 12, 16, 24, 32, and 48px.
+Desktop uses a sticky 260px category index and a fluid square-tile grid. The compact first screen is asymmetric: a `50` mark anchors the left while the purpose and controls occupy the right. Spacing follows 4, 8, 12, 16, 24, 32, and 48px.
 
 ## 6. Depth and elevation
 
@@ -46,6 +46,6 @@ Below 820px the category index becomes a horizontal, scrollable filter strip. Th
 ## 9. Agent prompt guide
 
 - Canvas `oklch(16% 0.012 55)`, paper `oklch(91% 0.022 75)`, accent `oklch(65% 0.19 35)`.
-- Create a ledger row with rank at 12px tabular, title at 22px weight 650, bilingual body at 14px and 1.7 line-height, 12px vertical padding, 1px hairline divider.
+- Create a square seed tile with rank at 11px tabular, title at 19px weight 650, English name at 11px, 13px padding, a 1px hairline border, and the full tile as the copy target.
 - Create an active category pill with 42px minimum height, 999px radius, vermilion fill, near-black text, and 0.97 press scale.
 - Create a search field on the stepped surface, 48px high, 6px radius, 1px hairline outline, and 2px vermilion focus ring.
