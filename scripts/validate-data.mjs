@@ -55,7 +55,7 @@ for (const marker of [
   if (!html.includes(marker)) errors.push(`index.html: missing ${marker}`);
 }
 if (!app.includes("fetch(\"./data/seeds.json\")")) errors.push("app.js: data fetch path is missing");
-for (const marker of ["randomCombinations", "combinationsText", "50-seeds-favorites", "50-seeds-theme", "document.documentElement.dataset.language"]) {
+for (const marker of ["randomCombinations", "combinationsText", "50-seeds-favorites", "50-seeds-theme", "document.documentElement.dataset.language", "document.documentElement.dataset.theme = isLight ? \"light\" : \"dark\""]) {
   if (!app.includes(marker)) errors.push(`app.js: missing ${marker}`);
 }
 if (!css.includes("@media (max-width: 820px)")) errors.push("styles.css: responsive breakpoint is missing");

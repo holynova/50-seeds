@@ -224,7 +224,7 @@ function setView(view) {
 function renderTheme() {
   const isLight = state.theme === "light";
   const toggle = document.querySelector("#theme-toggle");
-  document.documentElement.toggleAttribute("data-theme", isLight);
+  document.documentElement.dataset.theme = isLight ? "light" : "dark";
   if (!toggle) return;
   toggle.setAttribute("aria-pressed", String(isLight));
   toggle.setAttribute("aria-label", isLight ? "切换到夜间模式" : "切换到日间模式");
