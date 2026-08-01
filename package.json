@@ -7,7 +7,8 @@
   "scripts": {
     "generate": "node scripts/generate-data.mjs",
     "validate": "node scripts/validate-data.mjs",
-    "test": "npm run generate && npm run validate",
+    "test:combiner": "node scripts/test-combiner.mjs",
+    "test": "npm run generate && npm run test:combiner && npm run validate",
     "start": "npx --yes serve . -l 4173"
   },
   "keywords": [

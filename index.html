@@ -14,18 +14,134 @@
     <script type="module" src="./app.js"></script>
   </head>
   <body>
-    <a class="skip-link" href="#results">跳到结果</a>
+    <a class="skip-link" href="#combo-results">跳到组合结果</a>
     <header class="masthead">
       <a class="brand" href="./" aria-label="50 Seeds 首页">
         <span class="brand-mark" aria-hidden="true">50</span>
         <span class="brand-copy"><b>SEEDS</b><small>VISUAL INDEX / 2026</small></span>
       </a>
+      <nav class="view-nav" aria-label="主要功能">
+        <button type="button" data-view="combiner" class="is-active" aria-pressed="true">组合灵感</button>
+        <button type="button" data-view="library" aria-pressed="false">种子库</button>
+      </nav>
       <a class="repo-link" href="https://github.com/holynova/50-seeds" target="_blank" rel="noreferrer">
         GitHub repo <span aria-hidden="true">↗</span>
       </a>
     </header>
 
     <main>
+      <section id="combiner-view" class="app-view combiner-view is-active" aria-labelledby="combo-title">
+        <aside class="combo-category-panel" aria-labelledby="combo-category-heading">
+          <div class="panel-heading">
+            <h2 id="combo-category-heading">分类索引</h2>
+            <span id="combo-category-counter">48</span>
+          </div>
+          <p class="category-help">点击分类，设置当前编辑的一侧。</p>
+          <nav id="combo-category-list" class="category-list" aria-label="组合分类索引"></nav>
+        </aside>
+
+        <div class="combo-stage">
+          <div class="combo-intro">
+            <p class="eyebrow">即时摇号台 / INSPIRATION SHUFFLER</p>
+            <h1 id="combo-title">即时摇号，灵感随机发生。</h1>
+            <p>选择一到两个分类，立即获得 5 组组合。固定喜欢的种子后，只在固定项与另一侧种子之间计算。</p>
+          </div>
+
+          <div class="combo-controls" aria-label="组合设置">
+            <section class="combo-source is-focused" data-source="a" aria-labelledby="source-a-title">
+              <div class="source-heading">
+                <div><b id="source-a-title">分类 A</b><span>必选</span></div>
+                <button type="button" class="text-button" data-focus-source="a">正在编辑</button>
+              </div>
+              <label class="combo-select-wrap">
+                <span class="visually-hidden">选择分类 A</span>
+                <select id="combo-category-a"></select>
+              </label>
+              <div class="pin-summary">
+                <button id="toggle-pins-a" type="button" class="pin-toggle" aria-expanded="false">固定种子 <strong id="pin-count-a">0</strong></button>
+                <span id="pool-summary-a">使用整类 50 项</span>
+              </div>
+              <div id="pin-chips-a" class="pin-chips" aria-label="分类 A 已固定种子"></div>
+              <div id="pin-panel-a" class="pin-panel" hidden>
+                <label><span class="visually-hidden">筛选分类 A 种子</span><input id="pin-search-a" type="search" placeholder="搜索要固定的种子…"></label>
+                <div id="pin-options-a" class="pin-options"></div>
+              </div>
+            </section>
+
+            <section class="combo-source" data-source="b" aria-labelledby="source-b-title">
+              <div class="source-heading">
+                <div><b id="source-b-title">分类 B</b><span>可选</span></div>
+                <button type="button" class="text-button" data-focus-source="b">编辑这一侧</button>
+              </div>
+              <label class="combo-select-wrap">
+                <span class="visually-hidden">选择分类 B</span>
+                <select id="combo-category-b"></select>
+              </label>
+              <div class="pin-summary">
+                <button id="toggle-pins-b" type="button" class="pin-toggle" aria-expanded="false">固定种子 <strong id="pin-count-b">0</strong></button>
+                <span id="pool-summary-b">使用整类 50 项</span>
+              </div>
+              <div id="pin-chips-b" class="pin-chips" aria-label="分类 B 已固定种子"></div>
+              <div id="pin-panel-b" class="pin-panel" hidden>
+                <label><span class="visually-hidden">筛选分类 B 种子</span><input id="pin-search-b" type="search" placeholder="搜索要固定的种子…"></label>
+                <div id="pin-options-b" class="pin-options"></div>
+              </div>
+            </section>
+          </div>
+
+          <div class="combo-actionbar">
+            <div class="mode-toggle" aria-label="组合分类数量">
+              <button type="button" data-combo-mode="single" aria-pressed="false">一个分类</button>
+              <button type="button" data-combo-mode="double" class="is-active" aria-pressed="true">两个分类</button>
+            </div>
+            <p class="combination-math"><span id="math-a">50</span><i>×</i><span id="math-b">50</span><i>=</i><strong id="combination-total">2,500</strong><small>可用组合</small></p>
+            <button id="shuffle-button" class="primary-action" type="button">重新随机 5 组</button>
+          </div>
+
+          <section class="combo-results-section" aria-labelledby="combo-results-title">
+            <div class="combo-section-heading">
+              <div><h2 id="combo-results-title">随机结果</h2><span>每次生成 5 组，不重复</span></div>
+              <div class="result-actions">
+                <button id="copy-results" type="button">复制本轮 · 每行一组</button>
+                <button id="download-results" type="button">下载 JSON</button>
+              </div>
+            </div>
+            <ol id="combo-results" class="combo-results" aria-live="polite"></ol>
+          </section>
+
+          <section class="batch-panel" aria-labelledby="batch-title">
+            <div>
+              <p class="eyebrow">BATCH MODE</p>
+              <h2 id="batch-title">批量生成</h2>
+              <p>按当前固定范围生成更多不重复组合。</p>
+            </div>
+            <label>数量
+              <select id="batch-count">
+                <option value="20">20 组</option>
+                <option value="50">50 组</option>
+                <option value="100">100 组</option>
+                <option value="all">全部可用组合</option>
+              </select>
+            </label>
+            <button id="batch-copy" type="button">生成并复制 · 每行一组</button>
+            <button id="batch-download" type="button">生成并下载 JSON</button>
+          </section>
+
+          <section class="favorites-panel" aria-labelledby="favorites-title">
+            <div class="favorites-heading">
+              <h2 id="favorites-title">我的收藏 <span id="favorite-count">0</span></h2>
+              <div>
+                <button id="copy-favorites" type="button">复制收藏 · 每行一组</button>
+                <button id="export-favorites" type="button">导出收藏 JSON</button>
+                <button id="clear-favorites" type="button" class="quiet-action">清空</button>
+              </div>
+            </div>
+            <div id="favorite-list" class="favorite-list"><p>还没有收藏组合。</p></div>
+          </section>
+        </div>
+      </section>
+
+      <div id="library-view" class="app-view" hidden>
       <section class="intro" aria-labelledby="page-title">
         <div class="intro-number" aria-hidden="true">50<span>×48</span></div>
         <div class="intro-copy">
@@ -95,6 +211,7 @@
         <p>priority 在每个分类内从 1 排到 50。排序综合当前关注、主流榜单、长期文化影响与 AI 作图适用性，是 2026-07-31 的编辑型快照，并非单一平台的实时官方统计。</p>
         <div id="source-links" class="source-links" aria-label="参考来源"></div>
       </section>
+      </div>
     </main>
 
     <footer>
