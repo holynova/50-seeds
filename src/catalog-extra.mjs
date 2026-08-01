@@ -1309,5 +1309,113 @@ M87黑洞|M87 Black Hole
 宣泄|Catharsis
 韧性|Resilience
 静观|Quiet Contemplation`
+  ),
+  props_objects: category(
+    "道具与物件", "Props and Objects", "适合快速建立叙事线索、时代感与画面焦点的高频视觉物件。", "High-signal visual objects for establishing narrative clues, period, and a focal point.",
+    "把这一物件放进明确的空间、光线、尺度和使用痕迹中，让它成为画面的叙事锚点。", "Place the object in a specific space, light, scale, and evidence of use so it becomes the narrative anchor of the image.", `
+红色雨伞|Red Umbrella
+复古行李箱|Vintage Suitcase
+打字机|Typewriter
+怀表|Pocket Watch
+黑胶唱片|Vinyl Record
+留声机|Gramophone
+胶卷相机|Film Camera
+台灯|Desk Lamp
+油灯|Oil Lamp
+蜡烛|Candle
+火柴盒|Matchbox
+陶瓷花瓶|Ceramic Vase
+茶壶|Teapot
+咖啡杯|Coffee Cup
+玻璃瓶|Glass Bottle
+旧书|Old Book
+古地图|Antique Map
+指南针|Compass
+望远镜|Telescope
+纸飞机|Paper Airplane
+风筝|Kite
+纸灯笼|Paper Lantern
+面具|Mask
+王冠|Crown
+钥匙|Key
+挂锁|Padlock
+剪刀|Scissors
+羽毛笔|Quill Pen
+墨水瓶|Ink Bottle
+信封|Envelope
+邮票|Postage Stamp
+墙上时钟|Wall Clock
+木制棋盘|Wooden Chessboard
+扑克牌|Playing Cards
+玻璃弹珠|Glass Marbles
+木积木|Wooden Blocks
+泰迪熊|Teddy Bear
+风铃|Wind Chime
+装饰镜|Ornate Mirror
+相框|Picture Frame
+手提灯|Hand Lantern
+陶土雕像|Clay Figurine
+铜制烛台|Brass Candlestick
+古董收音机|Antique Radio
+缝纫机|Sewing Machine
+工具箱|Toolbox
+油漆刷|Paintbrush
+调色盘|Painter's Palette
+折叠扇|Folding Fan
+绳索卷|Coil of Rope`
+  ),
+  weather_seasons: category(
+    "天气与季节", "Weather and Seasons", "用季节、天空和天气变化快速改变画面色温、能见度与叙事节奏。", "Seasonal, sky, and weather cues that quickly shift color temperature, visibility, and narrative pace.",
+    "用云层、空气质感、地面反光、服装反应和光线方向呈现这一天气或季节。", "Express the weather or season through cloud layers, air texture, ground reflections, wardrobe response, and light direction.", `
+晴天|Clear Sky
+阴天|Overcast Sky
+蓝调时刻|Blue Hour
+黄金时刻|Golden Hour
+黎明|Dawn
+黄昏|Twilight
+午夜|Midnight
+日蚀|Solar Eclipse
+月夜|Moonlit Night
+满月|Full Moon
+新月|New Moon
+雷暴|Thunderstorm
+暴雨|Downpour
+毛毛雨|Drizzle
+大雪|Heavy Snow
+暴风雪|Blizzard
+雨夹雪|Sleet
+冰雹|Hailstorm
+浓雾|Fog
+薄雾|Mist
+霜冻|Frost
+结冰|Freeze
+热浪|Heatwave
+干旱|Drought
+沙尘暴|Sandstorm
+飓风|Hurricane
+龙卷风|Tornado
+极光|Aurora
+彩虹|Rainbow
+双彩虹|Double Rainbow
+云海|Sea of Clouds
+积雨云|Cumulonimbus
+卷云|Cirrus Clouds
+低云|Low Clouds
+烟霾|Haze
+潮湿空气|Humid Air
+晨雾|Morning Fog
+海雾|Sea Fog
+雨后清新|Fresh After Rain
+雪后寂静|Post-snow Silence
+春雨|Spring Rain
+夏日暴雨|Summer Rain
+秋日薄雾|Autumn Mist
+冬日霜冻|Winter Frost
+樱花季|Cherry Blossom Season
+梅雨季|Rainy Season
+盛夏|Midsummer
+枫叶季|Autumn Foliage
+午夜太阳|Midnight Sun
+极夜|Polar Night`
   )
 };

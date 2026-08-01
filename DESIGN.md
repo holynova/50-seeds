@@ -4,6 +4,8 @@
 
 Darkroom index: a warm-black, high-density visual archive with vermilion editorial marks. It should feel like a working reference desk for image makers, not a marketing landing page.
 
+Dark mode is the default working environment. A light mode is available from the masthead for daytime use; it keeps the same vermilion accent, density, and component vocabulary while moving the canvas and surfaces to a restrained paper-white scale.
+
 ## 2. Color palette and roles
 
 - Canvas: `oklch(16% 0.012 55)`, page background.
@@ -36,7 +38,7 @@ Depth comes from background lightness steps, never glass blur or generic card sh
 - Do use tabular numerals for rank and counts.
 - Do explain that popularity is an editorial snapshot.
 - Don't use gradients, glass effects, or purple-blue AI colors.
-- Don't render all 2,400 records on first paint.
+- Don't render all 2,500 records on first paint.
 - Don't hide focus states or rely on hover alone.
 
 ## 8. Responsive behavior

@@ -14,6 +14,7 @@ const state = {
   search: "",
   sort: "priority",
   language: "both",
+  theme: document.documentElement.dataset.theme === "light" ? "light" : "dark",
   visible: 120,
   view: "combiner",
   combo: {
@@ -21,6 +22,9 @@ const state = {
     categoryA: "films",
     categoryB: "lighting_setups",
     focusedSource: "a",
+    categorySearch: { a: "", b: "" },
+    categorySort: { a: "default", b: "default" },
+    openPicker: null,
     pinned: { a: [], b: [] },
     pinSearch: { a: "", b: "" },
     results: [],
@@ -44,8 +48,24 @@ const elements = {
   sources: document.querySelector("#source-links"),
   comboCategoryList: document.querySelector("#combo-category-list"),
   comboCategoryCounter: document.querySelector("#combo-category-counter"),
-  categoryA: document.querySelector("#combo-category-a"),
-  categoryB: document.querySelector("#combo-category-b"),
+  categoryPickers: {
+    a: {
+      root: document.querySelector('[data-picker-slot="a"]'),
+      trigger: document.querySelector("#combo-picker-trigger-a"),
+      current: document.querySelector("#combo-picker-current-a"),
+      menu: document.querySelector("#combo-picker-menu-a"),
+      search: document.querySelector("#combo-picker-search-a"),
+      options: document.querySelector("#combo-picker-options-a")
+    },
+    b: {
+      root: document.querySelector('[data-picker-slot="b"]'),
+      trigger: document.querySelector("#combo-picker-trigger-b"),
+      current: document.querySelector("#combo-picker-current-b"),
+      menu: document.querySelector("#combo-picker-menu-b"),
+      search: document.querySelector("#combo-picker-search-b"),
+      options: document.querySelector("#combo-picker-options-b")
+    }
+  },
   comboResults: document.querySelector("#combo-results"),
   favoriteList: document.querySelector("#favorite-list"),
   favoriteCount: document.querySelector("#favorite-count"),
@@ -201,6 +221,26 @@ function setView(view) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function renderTheme() {
+  const isLight = state.theme === "light";
+  const toggle = document.querySelector("#theme-toggle");
+  document.documentElement.toggleAttribute("data-theme", isLight);
+  if (!toggle) return;
+  toggle.setAttribute("aria-pressed", String(isLight));
+  toggle.setAttribute("aria-label", isLight ? "切换到夜间模式" : "切换到日间模式");
+  toggle.querySelector(".theme-toggle-icon").textContent = isLight ? "☾" : "☼";
+  toggle.querySelector(".theme-toggle-label").textContent = isLight ? "夜间模式" : "日间模式";
+  document.querySelector("#theme-color")?.setAttribute("content", isLight ? "#f7f5f0" : "#211d19");
+}
+
+function setTheme(theme) {
+  state.theme = theme === "light" ? "light" : "dark";
+  try {
+    localStorage.setItem("50-seeds-theme", state.theme);
+  } catch {}
+  renderTheme();
+}
+
 function comboCategoryId(slot) {
   return slot === "a" ? state.combo.categoryA : state.combo.categoryB;
 }
@@ -226,14 +266,56 @@ function renderComboCategoryList() {
   }).join("");
 }
 
-function renderCategorySelects() {
-  const markup = state.data.categories.map((category) => `
-    <option value="${category.id}">${escapeHtml(category.name)} · ${escapeHtml(category.englishName)} (${category.count})</option>
-  `).join("");
-  elements.categoryA.innerHTML = markup;
-  elements.categoryB.innerHTML = markup;
-  elements.categoryA.value = state.combo.categoryA;
-  elements.categoryB.value = state.combo.categoryB;
+function sortedComboCategories(slot) {
+  const query = normalize(state.combo.categorySearch[slot]).trim();
+  const sort = state.combo.categorySort[slot];
+  const categories = state.data.categories.filter((category) => [category.id, category.name, category.englishName]
+    .some((value) => normalize(value).includes(query)));
+  if (sort === "name") return categories.sort((a, b) => a.name.localeCompare(b.name, "zh-Hans-CN"));
+  if (sort === "englishName") return categories.sort((a, b) => a.englishName.localeCompare(b.englishName, "en"));
+  return categories;
+}
+
+function renderCategoryPicker(slot) {
+  const picker = elements.categoryPickers[slot];
+  const selectedId = comboCategoryId(slot);
+  const selected = categoryById(selectedId);
+  const isOpen = state.combo.openPicker === slot;
+  picker.root.classList.toggle("is-open", isOpen);
+  picker.trigger.setAttribute("aria-expanded", String(isOpen));
+  picker.trigger.disabled = slot === "b" && state.combo.mode === "single";
+  picker.current.innerHTML = `<strong>${escapeHtml(selected.name)}</strong><span>${escapeHtml(selected.englishName)} · ${selected.count}</span>`;
+  picker.menu.hidden = !isOpen;
+  picker.search.value = state.combo.categorySearch[slot];
+  picker.options.innerHTML = sortedComboCategories(slot).map((category) => {
+    const isSelected = category.id === selectedId;
+    const isOtherSide = state.combo.mode === "double" && ((slot === "a" && category.id === state.combo.categoryB) || (slot === "b" && category.id === state.combo.categoryA));
+    return `
+      <button type="button" class="picker-option${isSelected ? " is-selected" : ""}" data-picker-slot="${slot}" data-picker-category="${category.id}" role="option" aria-selected="${isSelected}">
+        <span><b>${escapeHtml(category.name)}</b><small>${escapeHtml(category.englishName)} · ${category.id}</small></span>
+        <em>${isSelected ? "当前" : isOtherSide ? "另一侧" : `${category.count} 项`}</em>
+      </button>
+    `;
+  }).join("") || '<p class="empty-note">没有匹配的分类。</p>';
+  picker.root.querySelectorAll("[data-picker-sort]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.pickerSort === state.combo.categorySort[slot]);
+  });
+}
+
+function renderCategoryPickers() {
+  renderCategoryPicker("a");
+  renderCategoryPicker("b");
+}
+
+function closeCategoryPickers() {
+  state.combo.openPicker = null;
+  renderCategoryPickers();
+}
+
+function toggleCategoryPicker(slot) {
+  state.combo.openPicker = state.combo.openPicker === slot ? null : slot;
+  renderCategoryPickers();
+  if (state.combo.openPicker === slot) elements.categoryPickers[slot].search.focus();
 }
 
 function renderSourceFocus() {
@@ -284,7 +366,7 @@ function renderCombinationMath() {
   elements.combinationTotal.textContent = total.toLocaleString("zh-CN");
   document.querySelector(".combination-math").classList.toggle("is-single", state.combo.mode === "single");
   document.querySelector('[data-source="b"]').classList.toggle("is-disabled", state.combo.mode === "single");
-  elements.categoryB.disabled = state.combo.mode === "single";
+  renderCategoryPickers();
   document.querySelector("#toggle-pins-b").disabled = state.combo.mode === "single";
 }
 
@@ -356,9 +438,10 @@ function setComboCategory(slot, categoryId) {
   else state.combo.categoryB = categoryId;
   state.combo.pinned[slot] = [];
   state.combo.pinSearch[slot] = "";
+  state.combo.categorySearch[slot] = "";
+  state.combo.categorySort[slot] = "default";
   document.querySelector(`#pin-search-${slot}`).value = "";
-  elements.categoryA.value = state.combo.categoryA;
-  elements.categoryB.value = state.combo.categoryB;
+  closeCategoryPickers();
   renderComboCategoryList();
   renderPinned(slot);
   renderCombinationMath();
@@ -367,6 +450,7 @@ function setComboCategory(slot, categoryId) {
 
 function setComboMode(mode) {
   state.combo.mode = mode;
+  if (mode === "single" && state.combo.openPicker === "b") state.combo.openPicker = null;
   document.querySelectorAll("[data-combo-mode]").forEach((button) => {
     const active = button.dataset.comboMode === mode;
     button.classList.toggle("is-active", active);
@@ -505,8 +589,31 @@ function bindComboEvents() {
     const button = event.target.closest("[data-combo-category]");
     if (button) setComboCategory(state.combo.focusedSource, button.dataset.comboCategory);
   });
-  elements.categoryA.addEventListener("change", () => setComboCategory("a", elements.categoryA.value));
-  elements.categoryB.addEventListener("change", () => setComboCategory("b", elements.categoryB.value));
+
+  for (const slot of ["a", "b"]) {
+    const picker = elements.categoryPickers[slot];
+    picker.trigger.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleCategoryPicker(slot);
+    });
+    picker.search.addEventListener("input", (event) => {
+      state.combo.categorySearch[slot] = event.target.value;
+      renderCategoryPicker(slot);
+    });
+    picker.menu.addEventListener("click", (event) => {
+      const sortButton = event.target.closest("[data-picker-sort]");
+      if (sortButton) {
+        state.combo.categorySort[slot] = sortButton.dataset.pickerSort;
+        renderCategoryPicker(slot);
+        return;
+      }
+      const categoryButton = event.target.closest("[data-picker-category]");
+      if (categoryButton) setComboCategory(slot, categoryButton.dataset.pickerCategory);
+    });
+  }
+  document.addEventListener("click", (event) => {
+    if (state.combo.openPicker && !event.target.closest(".category-picker")) closeCategoryPickers();
+  });
 
   for (const slot of ["a", "b"]) {
     const toggle = document.querySelector(`#toggle-pins-${slot}`);
@@ -568,7 +675,14 @@ function bindComboEvents() {
 }
 
 function bindGlobalEvents() {
+  document.querySelector("#theme-toggle")?.addEventListener("click", () => {
+    setTheme(state.theme === "dark" ? "light" : "dark");
+  });
   document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && state.combo.openPicker) {
+      closeCategoryPickers();
+      return;
+    }
     if (event.key === "/" && state.view === "library" && !["INPUT", "SELECT", "TEXTAREA"].includes(document.activeElement.tagName)) {
       event.preventDefault();
       elements.search.focus();
@@ -578,6 +692,7 @@ function bindGlobalEvents() {
 
 async function initialize() {
   try {
+    renderTheme();
     const response = await fetch("./data/seeds.json");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     state.data = await response.json();
@@ -591,7 +706,7 @@ async function initialize() {
     `).join("");
     renderCategories();
     renderResults({ announce: false });
-    renderCategorySelects();
+    renderCategoryPickers();
     renderComboCategoryList();
     renderSourceFocus();
     renderPinned("a");

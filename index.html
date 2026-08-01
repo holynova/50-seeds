@@ -3,12 +3,17 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#211d19">
-    <meta name="description" content="48 类、2,400 条 AI 作图热门视觉种子，支持搜索、筛选、复制与 JSON 下载。">
+    <meta id="theme-color" name="theme-color" content="#211d19">
+    <meta name="description" content="50 类、2,500 条 AI 作图热门视觉种子，支持搜索、筛选、复制与 JSON 下载。">
     <meta property="og:title" content="50 Seeds · AI 作图视觉种子库">
-    <meta property="og:description" content="每类 50 条，48 类共 2,400 条热门视觉种子。">
+    <meta property="og:description" content="每类 50 条，50 类共 2,500 条热门视觉种子。">
     <meta property="og:type" content="website">
     <title>50 Seeds · AI 作图视觉种子库</title>
+    <script>
+      try {
+        if (localStorage.getItem("50-seeds-theme") === "light") document.documentElement.dataset.theme = "light";
+      } catch {}
+    </script>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23100d0b'/%3E%3Ctext x='8' y='47' font-size='42' font-family='Arial' font-weight='800' fill='%23f35432'%3E50%3C/text%3E%3C/svg%3E">
     <link rel="stylesheet" href="./styles.css">
     <script type="module" src="./app.js"></script>
@@ -24,9 +29,15 @@
         <button type="button" data-view="combiner" class="is-active" aria-pressed="true">组合灵感</button>
         <button type="button" data-view="library" aria-pressed="false">种子库</button>
       </nav>
-      <a class="repo-link" href="https://github.com/holynova/50-seeds" target="_blank" rel="noreferrer">
-        GitHub repo <span aria-hidden="true">↗</span>
-      </a>
+      <div class="masthead-actions">
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false" aria-label="切换到日间模式">
+          <span class="theme-toggle-icon" aria-hidden="true">☼</span>
+          <span class="theme-toggle-label">日间模式</span>
+        </button>
+        <a class="repo-link" href="https://github.com/holynova/50-seeds" target="_blank" rel="noreferrer">
+          GitHub repo <span aria-hidden="true">↗</span>
+        </a>
+      </div>
     </header>
 
     <main>
@@ -34,7 +45,7 @@
         <aside class="combo-category-panel" aria-labelledby="combo-category-heading">
           <div class="panel-heading">
             <h2 id="combo-category-heading">分类索引</h2>
-            <span id="combo-category-counter">48</span>
+            <span id="combo-category-counter">50</span>
           </div>
           <p class="category-help">点击分类，设置当前编辑的一侧。</p>
           <nav id="combo-category-list" class="category-list" aria-label="组合分类索引"></nav>
@@ -53,10 +64,22 @@
                 <div><b id="source-a-title">分类 A</b><span>必选</span></div>
                 <button type="button" class="text-button" data-focus-source="a">正在编辑</button>
               </div>
-              <label class="combo-select-wrap">
-                <span class="visually-hidden">选择分类 A</span>
-                <select id="combo-category-a"></select>
-              </label>
+              <div class="category-picker" data-picker-slot="a">
+                <button id="combo-picker-trigger-a" class="picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="combo-picker-menu-a">
+                  <span class="picker-current" id="combo-picker-current-a"></span><span class="picker-caret" aria-hidden="true">OPEN</span>
+                </button>
+                <div id="combo-picker-menu-a" class="picker-menu" hidden>
+                  <div class="picker-toolbar">
+                    <label><span class="visually-hidden">搜索分类 A</span><input id="combo-picker-search-a" type="search" placeholder="搜索中文、English 或分类 ID…"></label>
+                    <div class="picker-sort" aria-label="分类 A 排序">
+                      <button type="button" data-picker-sort="default" class="is-active">目录顺序</button>
+                      <button type="button" data-picker-sort="name">中文 A–Z</button>
+                      <button type="button" data-picker-sort="englishName">English A–Z</button>
+                    </div>
+                  </div>
+                  <div id="combo-picker-options-a" class="picker-options" role="listbox" aria-label="选择分类 A"></div>
+                </div>
+              </div>
               <div class="pin-summary">
                 <button id="toggle-pins-a" type="button" class="pin-toggle" aria-expanded="false">固定种子 <strong id="pin-count-a">0</strong></button>
                 <span id="pool-summary-a">使用整类 50 项</span>
@@ -73,10 +96,22 @@
                 <div><b id="source-b-title">分类 B</b><span>可选</span></div>
                 <button type="button" class="text-button" data-focus-source="b">编辑这一侧</button>
               </div>
-              <label class="combo-select-wrap">
-                <span class="visually-hidden">选择分类 B</span>
-                <select id="combo-category-b"></select>
-              </label>
+              <div class="category-picker" data-picker-slot="b">
+                <button id="combo-picker-trigger-b" class="picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="combo-picker-menu-b">
+                  <span class="picker-current" id="combo-picker-current-b"></span><span class="picker-caret" aria-hidden="true">OPEN</span>
+                </button>
+                <div id="combo-picker-menu-b" class="picker-menu" hidden>
+                  <div class="picker-toolbar">
+                    <label><span class="visually-hidden">搜索分类 B</span><input id="combo-picker-search-b" type="search" placeholder="搜索中文、English 或分类 ID…"></label>
+                    <div class="picker-sort" aria-label="分类 B 排序">
+                      <button type="button" data-picker-sort="default" class="is-active">目录顺序</button>
+                      <button type="button" data-picker-sort="name">中文 A–Z</button>
+                      <button type="button" data-picker-sort="englishName">English A–Z</button>
+                    </div>
+                  </div>
+                  <div id="combo-picker-options-b" class="picker-options" role="listbox" aria-label="选择分类 B"></div>
+                </div>
+              </div>
               <div class="pin-summary">
                 <button id="toggle-pins-b" type="button" class="pin-toggle" aria-expanded="false">固定种子 <strong id="pin-count-b">0</strong></button>
                 <span id="pool-summary-b">使用整类 50 项</span>
@@ -143,14 +178,14 @@
 
       <div id="library-view" class="app-view" hidden>
       <section class="intro" aria-labelledby="page-title">
-        <div class="intro-number" aria-hidden="true">50<span>×48</span></div>
+        <div class="intro-number" aria-hidden="true">50<span>×50</span></div>
         <div class="intro-copy">
           <p class="eyebrow">AI IMAGE-MAKING SEED ARCHIVE</p>
           <h1 id="page-title">给画面一个<br><em>更好的起点。</em></h1>
-          <p class="lede">从创作者、视觉语言与叙事母题，到物件、空间和氛围。48 个分类，每类 50 条，中英双语，可直接搜索、复制或下载 JSON。</p>
+          <p class="lede">从创作者、视觉语言与叙事母题，到物件、空间和氛围。50 个分类，每类 50 条，中英双语，可直接搜索、复制或下载 JSON。</p>
           <div class="stats" aria-label="数据统计">
-            <span><strong id="seed-stat">2,400</strong> 种子</span>
-            <span><strong id="category-stat">48</strong> 分类</span>
+            <span><strong id="seed-stat">2,500</strong> 种子</span>
+            <span><strong id="category-stat">50</strong> 分类</span>
             <span><strong>2026.07</strong> 快照</span>
           </div>
         </div>
@@ -160,7 +195,7 @@
         <aside class="category-panel" aria-labelledby="category-heading">
           <div class="panel-heading">
             <h2 id="category-heading">分类索引</h2>
-            <span id="category-counter">48</span>
+            <span id="category-counter">50</span>
           </div>
           <nav id="category-list" class="category-list" aria-label="选择种子分类"></nav>
         </aside>

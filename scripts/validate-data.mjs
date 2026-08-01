@@ -4,8 +4,8 @@ const payload = JSON.parse(await readFile(new URL("../data/seeds.json", import.m
 const requiredFields = ["name", "englishName", "style", "englishStyle", "priority"];
 const errors = [];
 
-if (payload.meta.categoryCount !== 48) errors.push(`Expected 48 categories, got ${payload.meta.categoryCount}`);
-if (payload.meta.seedCount !== 2400) errors.push(`Expected 2400 seeds, got ${payload.meta.seedCount}`);
+if (payload.meta.categoryCount !== 50) errors.push(`Expected 50 categories, got ${payload.meta.categoryCount}`);
+if (payload.meta.seedCount !== 2500) errors.push(`Expected 2500 seeds, got ${payload.meta.seedCount}`);
 
 for (const category of payload.categories) {
   if (category.count !== 50 || category.seeds.length !== 50) {
@@ -42,8 +42,12 @@ for (const marker of [
   "data/seeds.json",
   "github.com/holynova/50-seeds",
   "id=\"search-input\"",
+  "id=\"theme-toggle\"",
   "id=\"category-list\"",
   "id=\"combo-results\"",
+  "id=\"combo-picker-trigger-a\"",
+  "id=\"combo-picker-search-a\"",
+  "data-picker-sort=\"englishName\"",
   "id=\"toggle-pins-a\"",
   "id=\"copy-results\"",
   "id=\"batch-copy\""
@@ -51,7 +55,7 @@ for (const marker of [
   if (!html.includes(marker)) errors.push(`index.html: missing ${marker}`);
 }
 if (!app.includes("fetch(\"./data/seeds.json\")")) errors.push("app.js: data fetch path is missing");
-for (const marker of ["randomCombinations", "combinationsText", "50-seeds-favorites", "document.documentElement.dataset.language"]) {
+for (const marker of ["randomCombinations", "combinationsText", "50-seeds-favorites", "50-seeds-theme", "document.documentElement.dataset.language"]) {
   if (!app.includes(marker)) errors.push(`app.js: missing ${marker}`);
 }
 if (!css.includes("@media (max-width: 820px)")) errors.push("styles.css: responsive breakpoint is missing");
