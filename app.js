@@ -62,6 +62,13 @@ const elements = {
   activeCategory: document.querySelector("#active-category"),
   activeCategoryEn: document.querySelector("#active-category-en"),
   resultCount: document.querySelector("#result-count"),
+  selectAllBtn: document.querySelector("#select-all-btn"),
+  selectAllCount: document.querySelector("#select-all-count"),
+  selectTop10Btn: document.querySelector("#select-top-10-btn"),
+  clearStagedBtn: document.querySelector("#clear-staged-btn"),
+  selectedCount: document.querySelector("#selected-count"),
+  copySelectedLinesBtn: document.querySelector("#copy-selected-lines-btn"),
+  copyAllLinesBtn: document.querySelector("#copy-all-lines-btn"),
   results: document.querySelector("#results"),
   status: document.querySelector("#status"),
   loadMore: document.querySelector("#load-more"),
@@ -101,6 +108,7 @@ const elements = {
   stagingCount: document.querySelector("#staging-count"),
   stagingChips: document.querySelector("#staging-chips"),
   copyStagedPrompt: document.querySelector("#copy-staged-prompt"),
+  copyStagedLines: document.querySelector("#copy-staged-lines"),
   clearStaged: document.querySelector("#clear-staged")
 };
 
@@ -214,6 +222,84 @@ function resultMarkup(seed) {
   `;
 }
 
+function seedLine(seed, language = state.language) {
+  if (language === "zh") return seed.name;
+  if (language === "en") return seed.englishName;
+  return `${seed.name} / ${seed.englishName}`;
+}
+
+function seedsLinesText(seeds, language = state.language) {
+  return seeds.map((seed) => seedLine(seed, language)).join("\n");
+}
+
+function selectAllCurrent() {
+  const currentSeeds = filteredSeeds();
+  if (!currentSeeds.length) return;
+  const currentIds = new Set(currentSeeds.map((s) => s.id));
+  const allAlreadyStaged = currentSeeds.every((s) => state.staged.some((st) => st.id === s.id));
+
+  if (allAlreadyStaged) {
+    state.staged = state.staged.filter((s) => !currentIds.has(s.id));
+    announceResult(`已取消选中当前 ${currentSeeds.length} 条种子`);
+  } else {
+    const stagedIds = new Set(state.staged.map((s) => s.id));
+    const toAdd = currentSeeds.filter((s) => !stagedIds.has(s.id));
+    state.staged = [...state.staged, ...toAdd];
+    announceResult(`已全选当前 ${currentSeeds.length} 条种子`);
+  }
+  renderStagingBasket();
+  renderResults({ announce: false });
+}
+
+function selectTopN(n = 10) {
+  const currentSeeds = filteredSeeds();
+  if (!currentSeeds.length) return;
+  const topSeeds = currentSeeds.slice(0, n);
+  const stagedIds = new Set(state.staged.map((s) => s.id));
+  const toAdd = topSeeds.filter((s) => !stagedIds.has(s.id));
+  state.staged = [...state.staged, ...toAdd];
+  renderStagingBasket();
+  renderResults({ announce: false });
+  announceResult(`已选中前 ${Math.min(n, topSeeds.length)} 条种子`);
+}
+
+function clearStagedSeeds() {
+  const count = state.staged.length;
+  if (!count) {
+    announceResult("暂无已选种子");
+    return;
+  }
+  state.staged = [];
+  renderStagingBasket();
+  renderResults({ announce: false });
+  announceResult("已清空已选种子");
+}
+
+function copySelectedLines() {
+  if (!state.staged.length) {
+    const seeds = filteredSeeds();
+    if (!seeds.length) {
+      announceResult("当前无匹配种子可复制");
+      return;
+    }
+    const text = seedsLinesText(seeds, state.language);
+    copyText(text, `暂无选中项，已为您复制当前 ${seeds.length} 条种子（一行一个）到剪贴板！`);
+    return;
+  }
+  const text = seedsLinesText(state.staged, state.language);
+  copyText(text, `已复制 ${state.staged.length} 条已选种子（一行一个）到剪贴板！`);
+}
+
+function copyAllLines() {
+  const seeds = filteredSeeds();
+  if (!seeds.length) {
+    announceResult("当前无匹配种子可复制");
+    return;
+  }
+  const text = seedsLinesText(seeds, state.language);
+  copyText(text, `已复制全部 ${seeds.length} 条种子（一行一个）到剪贴板！`);
+}
+
 function renderResults({ announce = true } = {}) {
   const results = filteredSeeds();
   const category = state.category === "all"
@@ -223,6 +309,14 @@ function renderResults({ announce = true } = {}) {
   elements.activeCategory.textContent = state.language === "en" ? category.englishName : category.name;
   elements.activeCategoryEn.textContent = state.language === "zh" ? category.name : category.englishName.toLocaleUpperCase("en");
   elements.resultCount.textContent = results.length.toLocaleString("zh-CN");
+  if (elements.selectAllCount) elements.selectAllCount.textContent = results.length.toLocaleString("zh-CN");
+  if (elements.selectedCount) elements.selectedCount.textContent = state.staged.length.toLocaleString("zh-CN");
+
+  if (elements.selectAllBtn) {
+    const allAlreadyStaged = results.length > 0 && results.every((s) => state.staged.some((st) => st.id === s.id));
+    elements.selectAllBtn.classList.toggle("is-active", allAlreadyStaged);
+  }
+
   elements.results.innerHTML = results.slice(0, state.visible).map(resultMarkup).join("");
   elements.status.hidden = results.length > 0;
   elements.status.textContent = results.length ? "" : "没有匹配的种子，试试更短的关键词或切换分类。";
@@ -793,7 +887,14 @@ function bindLibraryEvents() {
     renderResults({ announce: false });
   });
 
+  elements.selectAllBtn?.addEventListener("click", selectAllCurrent);
+  elements.selectTop10Btn?.addEventListener("click", () => selectTopN(10));
+  elements.clearStagedBtn?.addEventListener("click", clearStagedSeeds);
+  elements.copySelectedLinesBtn?.addEventListener("click", copySelectedLines);
+  elements.copyAllLinesBtn?.addEventListener("click", copyAllLines);
+
   elements.copyStagedPrompt?.addEventListener("click", copyStagedPrompt);
+  elements.copyStagedLines?.addEventListener("click", copySelectedLines);
   elements.clearStaged?.addEventListener("click", () => {
     state.staged = [];
     renderStagingBasket();
@@ -1035,8 +1136,10 @@ async function initialize() {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     state.data = await response.json();
     loadFavorites();
-    document.querySelector("#seed-stat").textContent = state.data.meta.seedCount.toLocaleString("zh-CN");
-    document.querySelector("#category-stat").textContent = state.data.meta.categoryCount;
+    const seedStat = document.querySelector("#seed-stat");
+    if (seedStat) seedStat.textContent = state.data.meta.seedCount.toLocaleString("zh-CN");
+    const catStat = document.querySelector("#category-stat");
+    if (catStat) catStat.textContent = state.data.meta.categoryCount;
     elements.categoryCounter.textContent = state.data.meta.categoryCount;
     elements.comboCategoryCounter.textContent = state.data.meta.categoryCount;
     elements.sources.innerHTML = state.data.meta.sources.map((source) => `

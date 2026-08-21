@@ -203,20 +203,6 @@
       </section>
 
       <div id="library-view" class="app-view" hidden>
-      <section class="intro" aria-labelledby="page-title">
-        <div class="intro-number" aria-hidden="true">50<span>×50</span></div>
-        <div class="intro-copy">
-          <p class="eyebrow">AI IMAGE-MAKING SEED ARCHIVE</p>
-          <h1 id="page-title">给画面一个<br><em>更好的起点。</em></h1>
-          <p class="lede">从创作者、视觉语言与叙事母题，到物件、空间和氛围。50 个分类，每类 50 条，中英双语，可直接搜索、复制或下载 JSON。</p>
-          <div class="stats" aria-label="数据统计">
-            <span><strong id="seed-stat">2,500</strong> 种子</span>
-            <span><strong id="category-stat">50</strong> 分类</span>
-            <span><strong>2026.07</strong> 快照</span>
-          </div>
-        </div>
-      </section>
-
       <section class="workspace" aria-label="种子筛选器">
         <aside class="category-panel" aria-labelledby="category-heading">
           <div class="panel-heading">
@@ -259,11 +245,22 @@
           </div>
 
           <div class="result-heading">
-            <div>
+            <div class="result-heading-title">
               <p class="eyebrow" id="active-category-en">ALL CATEGORIES</p>
               <h2 id="active-category">全部种子</h2>
+              <p class="result-sub"><strong id="result-count">0</strong> 条结果 · <span>点击卡片复制完整词</span></p>
             </div>
-            <p><strong id="result-count">0</strong> 条结果<br><span>点击方块复制完整提示词</span></p>
+            <div class="library-batch-bar" aria-label="快捷选择与复制">
+              <div class="quick-select-group" role="group" aria-label="快速选择">
+                <button id="select-all-btn" type="button" class="batch-btn">全选当前 (<span id="select-all-count">50</span>)</button>
+                <button id="select-top-10-btn" type="button" class="batch-btn">选前 10 项</button>
+                <button id="clear-staged-btn" type="button" class="batch-btn quiet">清空已选 (<span id="selected-count">0</span>)</button>
+              </div>
+              <div class="quick-copy-group" role="group" aria-label="批量复制">
+                <button id="copy-selected-lines-btn" type="button" class="batch-btn highlight">📋 复制已选 · 一行一个</button>
+                <button id="copy-all-lines-btn" type="button" class="batch-btn">复制全部 · 一行一个</button>
+              </div>
+            </div>
           </div>
 
           <div id="status" class="status" role="status" aria-live="polite">正在载入种子库…</div>
@@ -282,8 +279,9 @@
           </div>
           <div id="staging-chips" class="staging-chips"></div>
           <div class="staging-actions">
-            <button id="copy-staged-prompt" class="staging-primary" type="button">一键合并复制 Prompt</button>
-            <button id="clear-staged" class="staging-clear" type="button">清空</button>
+            <button id="copy-staged-prompt" class="staging-primary" type="button" title="合并为提示词">合并复制 Prompt</button>
+            <button id="copy-staged-lines" class="staging-lines-btn" type="button" title="每行一个词条">一行一个 📋</button>
+            <button id="clear-staged" class="staging-clear" type="button" title="清空暂存篮">清空</button>
           </div>
         </div>
       </aside>
