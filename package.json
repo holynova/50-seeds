@@ -1,6 +1,6 @@
 {
   "name": "50-seeds",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "50 categories of popular visual seeds for AI image creation",
   "type": "module",
@@ -17,5 +17,8 @@
     "visual-seeds",
     "json"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
 }

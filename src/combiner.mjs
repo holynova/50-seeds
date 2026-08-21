@@ -31,10 +31,23 @@ export function seedLabel(seed, language = "both") {
   return `${seed.name} / ${seed.englishName}`;
 }
 
-export function combinationLine(combination, language = "both") {
-  return combination.seeds.map((seed) => seedLabel(seed, language)).join(" + ");
+export function combinationLine(combination, language = "both", format = "plus") {
+  const seeds = combination.seeds;
+  if (format === "comma") {
+    return seeds.map((seed) => seedLabel(seed, language)).join(", ");
+  }
+  if (format === "midjourney") {
+    if (language === "en") {
+      return `${seeds.map((s) => s.englishName).join(", ")}, cinematic lighting, photorealistic, 8k --v 6.0`;
+    }
+    if (language === "zh") {
+      return `${seeds.map((s) => s.name).join(", ")}, 电影级光影, 杰作, 高清画质 --v 6.0`;
+    }
+    return `${seeds.map((s) => `${s.name} (${s.englishName})`).join(", ")}, cinematic lighting, masterpiece, 8k --v 6.0`;
+  }
+  return seeds.map((seed) => seedLabel(seed, language)).join(" + ");
 }
 
-export function combinationsText(combinations, language = "both") {
-  return combinations.map((combination) => combinationLine(combination, language)).join("\n");
+export function combinationsText(combinations, language = "both", format = "plus") {
+  return combinations.map((combination) => combinationLine(combination, language, format)).join("\n");
 }

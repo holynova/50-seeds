@@ -8,27 +8,46 @@ import {
   seedLabel
 } from "./src/combiner.mjs";
 
+const DIMENSIONS = {
+  creator: { label: "创作者", color: "var(--dim-creator)", ids: ["artists", "mangaka", "architects", "film_directors", "illustrators", "fashion_designers", "graphic_designers", "photographers"] },
+  visual: { label: "视觉语言", color: "var(--dim-visual)", ids: ["ai_art_styles", "art_movements", "compositions", "lighting_setups", "color_palettes", "materials_textures", "photography_genres", "architectural_styles", "fashion_styles"] },
+  narrative: { label: "叙事母题", color: "var(--dim-narrative)", ids: ["films", "games", "tv_series", "manga", "paintings", "novels", "iconic_scenes", "anime_characters", "game_characters", "mythology", "fantasy_creatures", "historical_civilizations", "sci_fi_concepts"] },
+  space: { label: "空间物件", color: "var(--dim-space)", ids: ["cities", "landmarks", "landscapes", "interior_spaces", "vehicles", "props_objects", "space_objects", "food_dishes", "musical_instruments", "animals", "plants"] },
+  mood: { label: "情绪自然", color: "var(--dim-mood)", ids: ["women", "famous_people", "singers", "screen_stars", "professions", "emotions_atmospheres", "weather_seasons", "natural_phenomena", "festivals"] }
+};
+
+function getCategoryDimension(categoryId) {
+  for (const [key, dim] of Object.entries(DIMENSIONS)) {
+    if (dim.ids.includes(categoryId)) return { key, ...dim };
+  }
+  return { key: "other", label: "其他", color: "var(--accent)" };
+}
+
 const state = {
   data: null,
   category: "all",
+  categoryFilter: "",
   search: "",
   sort: "priority",
   language: "both",
   theme: document.documentElement.dataset.theme === "light" ? "light" : "dark",
   visible: 120,
   view: "combiner",
+  staged: [],
   combo: {
     mode: "double",
     categoryA: "films",
     categoryB: "lighting_setups",
     focusedSource: "a",
+    categoryFilter: "",
     categorySearch: { a: "", b: "" },
     categorySort: { a: "default", b: "default" },
     openPicker: null,
     pinned: { a: [], b: [] },
     pinSearch: { a: "", b: "" },
     results: [],
-    favorites: []
+    favorites: [],
+    promptFormat: "plus"
   }
 };
 
@@ -36,6 +55,8 @@ const pageSize = 120;
 const elements = {
   categoryList: document.querySelector("#category-list"),
   categoryCounter: document.querySelector("#category-counter"),
+  categoryFilter: document.querySelector("#category-filter"),
+  categoryFilterClear: document.querySelector("#category-filter-clear"),
   search: document.querySelector("#search-input"),
   sort: document.querySelector("#sort-select"),
   activeCategory: document.querySelector("#active-category"),
@@ -45,9 +66,12 @@ const elements = {
   status: document.querySelector("#status"),
   loadMore: document.querySelector("#load-more"),
   toast: document.querySelector("#toast"),
+  backToTop: document.querySelector("#back-to-top"),
   sources: document.querySelector("#source-links"),
   comboCategoryList: document.querySelector("#combo-category-list"),
   comboCategoryCounter: document.querySelector("#combo-category-counter"),
+  comboCategoryFilter: document.querySelector("#combo-category-filter"),
+  comboCategoryFilterClear: document.querySelector("#combo-category-filter-clear"),
   categoryPickers: {
     a: {
       root: document.querySelector('[data-picker-slot="a"]'),
@@ -72,7 +96,12 @@ const elements = {
   mathA: document.querySelector("#math-a"),
   mathB: document.querySelector("#math-b"),
   combinationTotal: document.querySelector("#combination-total"),
-  batchCount: document.querySelector("#batch-count")
+  batchCount: document.querySelector("#batch-count"),
+  stagingBasket: document.querySelector("#staging-basket"),
+  stagingCount: document.querySelector("#staging-count"),
+  stagingChips: document.querySelector("#staging-chips"),
+  copyStagedPrompt: document.querySelector("#copy-staged-prompt"),
+  clearStaged: document.querySelector("#clear-staged")
 };
 
 const escapeHtml = (value) => String(value)
@@ -117,17 +146,40 @@ function filteredSeeds() {
   });
 }
 
-function renderCategories() {
-  const buttons = [
-    { id: "all", name: "全部种子", englishName: "All", count: state.data.meta.seedCount },
-    ...state.data.categories
-  ];
-  elements.categoryList.innerHTML = buttons.map((category) => `
-    <button type="button" class="category-button${state.category === category.id ? " is-active" : ""}" data-category="${escapeHtml(category.id)}" aria-pressed="${state.category === category.id}">
-      <span><b>${escapeHtml(category.name)}</b><small lang="en">${escapeHtml(category.englishName)}</small></span>
-      <em>${category.count}</em>
-    </button>
-  `).join("");
+function renderCategories({ scrollToActive = false } = {}) {
+  const query = normalize(state.categoryFilter.trim());
+  const allItem = { id: "all", name: "全部种子", englishName: "All", count: state.data.meta.seedCount };
+  const filteredCategories = state.data.categories.filter((cat) => {
+    if (!query) return true;
+    return [cat.id, cat.name, cat.englishName].some((val) => normalize(val).includes(query));
+  });
+  const showAll = !query || "全部种子all".includes(query);
+  const buttons = showAll ? [allItem, ...filteredCategories] : filteredCategories;
+
+  if (elements.categoryFilterClear) {
+    elements.categoryFilterClear.hidden = !query;
+  }
+  if (elements.categoryCounter) {
+    elements.categoryCounter.textContent = query ? filteredCategories.length : state.data.meta.categoryCount;
+  }
+
+  elements.categoryList.innerHTML = buttons.length ? buttons.map((category) => {
+    const dim = getCategoryDimension(category.id);
+    return `
+      <button type="button" class="category-button${state.category === category.id ? " is-active" : ""}" data-category="${escapeHtml(category.id)}" aria-pressed="${state.category === category.id}">
+        <span>
+          <b><i class="dimension-dot" style="--dim-color: ${dim.color}" title="${dim.label}"></i>${escapeHtml(category.name)}</b>
+          <small lang="en">${escapeHtml(category.englishName)}</small>
+        </span>
+        <em>${category.count}</em>
+      </button>
+    `;
+  }).join("") : '<p class="empty-note">没有匹配的分类。</p>';
+
+  if (scrollToActive) {
+    const activeBtn = elements.categoryList.querySelector(".category-button.is-active");
+    if (activeBtn) activeBtn.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
 }
 
 function resultMarkup(seed) {
@@ -135,19 +187,29 @@ function resultMarkup(seed) {
   const showEn = state.language !== "zh";
   const visibleNameLength = state.language === "en" ? seed.englishName.length : seed.name.length;
   const hasLongName = visibleNameLength > (state.language === "en" ? 24 : 13);
+  const isStaged = state.staged.some((item) => item.id === seed.id);
+  const dim = getCategoryDimension(seed.category);
+
   return `
     <li class="seed-item" data-seed-id="${seed.id}">
-      <button type="button" class="seed-tile language-${state.language}${hasLongName ? " has-long-name" : ""}" data-copy="${seed.id}" aria-label="复制 ${escapeHtml(seed.name)} 的完整提示词">
+      <div class="seed-tile language-${state.language}${hasLongName ? " has-long-name" : ""}${isStaged ? " is-staged" : ""}">
         <span class="seed-meta">
           <span class="rank" aria-label="分类内热度排名 ${seed.priority}">${String(seed.priority).padStart(2, "0")}</span>
-          <span class="seed-category">${escapeHtml(state.language === "en" ? seed.categoryEnglishName : seed.categoryName)}</span>
+          <span class="seed-category"><i class="dimension-dot" style="--dim-color: ${dim.color}"></i>${escapeHtml(state.language === "en" ? seed.categoryEnglishName : seed.categoryName)}</span>
         </span>
-        <span class="seed-name">
+        <div class="seed-name" data-copy="${seed.id}" role="button" tabindex="0" title="点击复制完整提示词">
           ${showZh ? `<strong lang="zh-CN">${escapeHtml(seed.name)}</strong>` : ""}
           ${showEn ? `<span lang="en">${escapeHtml(seed.englishName)}</span>` : ""}
-        </span>
-        <span class="copy-cue"><span>${state.language === "en" ? "COPY PROMPT" : "复制提示词"}</span><span aria-hidden="true">COPY</span></span>
-      </button>
+        </div>
+        <div class="seed-actions-row">
+          <button type="button" class="seed-copy-btn" data-copy="${seed.id}" title="复制提示词">
+            <span>${state.language === "en" ? "COPY" : "复制"}</span>
+          </button>
+          <button type="button" class="seed-stage-btn${isStaged ? " is-staged" : ""}" data-stage="${seed.id}" title="${isStaged ? "移出暂存篮" : "加入暂存篮"}" aria-pressed="${isStaged}">
+            <span>${isStaged ? "已暂存" : "+ 暂存"}</span>
+          </button>
+        </div>
+      </div>
     </li>
   `;
 }
@@ -206,6 +268,51 @@ async function copySeed(id) {
   await copyText(text, `已复制：${seed.name}`);
 }
 
+function toggleStageSeed(id) {
+  const seed = allSeeds().find((item) => item.id === id);
+  if (!seed) return;
+  const exists = state.staged.some((item) => item.id === id);
+  state.staged = exists
+    ? state.staged.filter((item) => item.id !== id)
+    : [...state.staged, seed];
+  renderStagingBasket();
+  renderResults({ announce: false });
+  announceResult(exists ? `已移出暂存篮：${seed.name}` : `已加入暂存篮：${seed.name}`);
+}
+
+function renderStagingBasket() {
+  if (!elements.stagingBasket) return;
+  const count = state.staged.length;
+  elements.stagingBasket.hidden = count === 0;
+  if (count === 0) return;
+  elements.stagingCount.textContent = count;
+  elements.stagingChips.innerHTML = state.staged.map((seed) => `
+    <span class="staged-chip">
+      <span>${escapeHtml(seedLabel(seed, state.language))}</span>
+      <button type="button" data-unstage="${seed.id}" aria-label="移除 ${escapeHtml(seed.name)}">×</button>
+    </span>
+  `).join("");
+}
+
+function copyStagedPrompt() {
+  if (!state.staged.length) return;
+  let text = "";
+  if (state.combo.promptFormat === "midjourney") {
+    if (state.language === "en") {
+      text = `${state.staged.map((s) => s.englishName).join(", ")}, cinematic lighting, masterpiece, photorealistic, 8k --v 6.0`;
+    } else if (state.language === "zh") {
+      text = `${state.staged.map((s) => s.name).join(", ")}, 电影级光影, 杰作, 高清画质 --v 6.0`;
+    } else {
+      text = `${state.staged.map((s) => `${s.name} (${s.englishName})`).join(", ")}, cinematic lighting, masterpiece, 8k --v 6.0`;
+    }
+  } else if (state.combo.promptFormat === "plus") {
+    text = state.staged.map((s) => seedLabel(s, state.language)).join(" + ");
+  } else {
+    text = state.staged.map((s) => seedLabel(s, state.language)).join(", ");
+  }
+  copyText(text, `已合并复制 ${state.staged.length} 个已暂存提示词！`);
+}
+
 function setView(view) {
   state.view = view;
   document.querySelectorAll("[data-view]").forEach((button) => {
@@ -253,17 +360,39 @@ function comboPool(slot) {
   return effectivePool(comboCategory(slot).seeds, state.combo.pinned[slot]);
 }
 
-function renderComboCategoryList() {
-  elements.comboCategoryList.innerHTML = state.data.categories.map((category) => {
+function renderComboCategoryList({ scrollToActive = false } = {}) {
+  const query = normalize(state.combo.categoryFilter.trim());
+  const filtered = state.data.categories.filter((category) => {
+    if (!query) return true;
+    return [category.id, category.name, category.englishName].some((val) => normalize(val).includes(query));
+  });
+
+  if (elements.comboCategoryFilterClear) {
+    elements.comboCategoryFilterClear.hidden = !query;
+  }
+  if (elements.comboCategoryCounter) {
+    elements.comboCategoryCounter.textContent = query ? filtered.length : state.data.meta.categoryCount;
+  }
+
+  elements.comboCategoryList.innerHTML = filtered.length ? filtered.map((category) => {
     const isA = state.combo.categoryA === category.id;
     const isB = state.combo.mode === "double" && state.combo.categoryB === category.id;
+    const dim = getCategoryDimension(category.id);
     return `
       <button type="button" class="category-button${isA || isB ? " is-active" : ""}" data-combo-category="${category.id}" aria-label="将 ${escapeHtml(category.name)} 设置为分类 ${state.combo.focusedSource.toLocaleUpperCase()}">
-        <span><b>${escapeHtml(category.name)}</b><small lang="en">${escapeHtml(category.englishName)}</small></span>
+        <span>
+          <b><i class="dimension-dot" style="--dim-color: ${dim.color}" title="${dim.label}"></i>${escapeHtml(category.name)}</b>
+          <small lang="en">${escapeHtml(category.englishName)}</small>
+        </span>
         <em>${isA ? "A" : isB ? "B" : category.count}</em>
       </button>
     `;
-  }).join("");
+  }).join("") : '<p class="empty-note">没有匹配的分类。</p>';
+
+  if (scrollToActive) {
+    const activeBtn = elements.comboCategoryList.querySelector(".category-button.is-active");
+    if (activeBtn) activeBtn.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
 }
 
 function sortedComboCategories(slot) {
@@ -290,9 +419,13 @@ function renderCategoryPicker(slot) {
   picker.options.innerHTML = sortedComboCategories(slot).map((category) => {
     const isSelected = category.id === selectedId;
     const isOtherSide = state.combo.mode === "double" && ((slot === "a" && category.id === state.combo.categoryB) || (slot === "b" && category.id === state.combo.categoryA));
+    const dim = getCategoryDimension(category.id);
     return `
       <button type="button" class="picker-option${isSelected ? " is-selected" : ""}" data-picker-slot="${slot}" data-picker-category="${category.id}" role="option" aria-selected="${isSelected}">
-        <span><b>${escapeHtml(category.name)}</b><small>${escapeHtml(category.englishName)} · ${category.id}</small></span>
+        <span>
+          <b><i class="dimension-dot" style="--dim-color: ${dim.color}" title="${dim.label}"></i>${escapeHtml(category.name)}</b>
+          <small>${escapeHtml(category.englishName)} · ${category.id}</small>
+        </span>
         <em>${isSelected ? "当前" : isOtherSide ? "另一侧" : `${category.count} 项`}</em>
       </button>
     `;
@@ -316,6 +449,12 @@ function toggleCategoryPicker(slot) {
   state.combo.openPicker = state.combo.openPicker === slot ? null : slot;
   renderCategoryPickers();
   if (state.combo.openPicker === slot) elements.categoryPickers[slot].search.focus();
+}
+
+function setFocusedSource(slot) {
+  state.combo.focusedSource = slot;
+  renderSourceFocus();
+  renderComboCategoryList();
 }
 
 function renderSourceFocus() {
@@ -370,35 +509,64 @@ function renderCombinationMath() {
   document.querySelector("#toggle-pins-b").disabled = state.combo.mode === "single";
 }
 
-function combinationTermMarkup(seed) {
-  const showZh = state.language !== "en";
-  const showEn = state.language !== "zh";
-  return `
-    <span class="combo-term">
-      ${showZh ? `<strong>${escapeHtml(seed.name)}</strong>` : ""}
-      ${showEn ? `<span>${escapeHtml(seed.englishName)}</span>` : ""}
-      <small>${escapeHtml(state.language === "en" ? seed.categoryEnglishName : seed.categoryName)}</small>
-    </span>
-  `;
-}
-
 function isFavorite(id) {
   return state.combo.favorites.some((item) => item.id === id);
 }
 
 function renderComboResults() {
-  elements.comboResults.innerHTML = state.combo.results.map((combination, index) => `
-    <li class="combo-row" data-combination-id="${combination.id}">
-      <span class="combo-rank">${String(index + 1).padStart(2, "0")}</span>
-      <div class="combo-equation language-${state.language}">
-        ${combination.seeds.map(combinationTermMarkup).join('<span class="combo-plus">+</span>')}
+  elements.comboResults.innerHTML = state.combo.results.map((combination, index) => {
+    const seedA = combination.seeds[0];
+    const seedB = combination.seeds[1];
+    const isPinnedA = seedA && state.combo.pinned.a.includes(seedA.id);
+    const isPinnedB = seedB && state.combo.pinned.b.includes(seedB.id);
+
+    const termMarkupA = seedA ? `
+      <div class="combo-term">
+        <div class="combo-term-main">
+          ${state.language !== "en" ? `<strong lang="zh-CN">${escapeHtml(seedA.name)}</strong>` : ""}
+          ${state.language !== "zh" ? `<span lang="en">${escapeHtml(seedA.englishName)}</span>` : ""}
+        </div>
+        <div class="combo-term-meta">
+          <small>${escapeHtml(state.language === "en" ? seedA.categoryEnglishName : seedA.categoryName)}</small>
+          <button type="button" class="direct-pin-btn${isPinnedA ? " is-pinned" : ""}" data-direct-pin-slot="a" data-direct-pin-id="${seedA.id}" title="${isPinnedA ? "取消固定该词条" : "固定该词条继续摇号"}" aria-pressed="${isPinnedA}">
+            <span class="pin-icon" aria-hidden="true">${isPinnedA ? "📌" : "📍"}</span>
+            <span class="pin-text">${isPinnedA ? "已固定" : "固定"}</span>
+          </button>
+        </div>
       </div>
-      <div class="combo-row-actions">
-        <button type="button" data-favorite-combination="${combination.id}" aria-pressed="${isFavorite(combination.id)}">${isFavorite(combination.id) ? "已收藏" : "收藏"}</button>
-        <button type="button" data-copy-combination="${combination.id}">复制组合</button>
+    ` : "";
+
+    const termMarkupB = seedB ? `
+      <div class="combo-term">
+        <div class="combo-term-main">
+          ${state.language !== "en" ? `<strong lang="zh-CN">${escapeHtml(seedB.name)}</strong>` : ""}
+          ${state.language !== "zh" ? `<span lang="en">${escapeHtml(seedB.englishName)}</span>` : ""}
+        </div>
+        <div class="combo-term-meta">
+          <small>${escapeHtml(state.language === "en" ? seedB.categoryEnglishName : seedB.categoryName)}</small>
+          <button type="button" class="direct-pin-btn${isPinnedB ? " is-pinned" : ""}" data-direct-pin-slot="b" data-direct-pin-id="${seedB.id}" title="${isPinnedB ? "取消固定该词条" : "固定该词条继续摇号"}" aria-pressed="${isPinnedB}">
+            <span class="pin-icon" aria-hidden="true">${isPinnedB ? "📌" : "📍"}</span>
+            <span class="pin-text">${isPinnedB ? "已固定" : "固定"}</span>
+          </button>
+        </div>
       </div>
-    </li>
-  `).join("") || '<li class="empty-note">当前范围没有可用组合。</li>';
+    ` : "";
+
+    const equationMarkup = seedB ? `${termMarkupA}<span class="combo-plus">+</span>${termMarkupB}` : termMarkupA;
+
+    return `
+      <li class="combo-row" data-combination-id="${combination.id}" style="animation-delay: ${index * 35}ms">
+        <span class="combo-rank" title="第 ${index + 1} 组 (快捷键 ${index + 1})">${String(index + 1).padStart(2, "0")}</span>
+        <div class="combo-equation language-${state.language}">
+          ${equationMarkup}
+        </div>
+        <div class="combo-row-actions">
+          <button type="button" data-favorite-combination="${combination.id}" aria-pressed="${isFavorite(combination.id)}">${isFavorite(combination.id) ? "已收藏" : "收藏"}</button>
+          <button type="button" data-copy-combination="${combination.id}">复制组合</button>
+        </div>
+      </li>
+    `;
+  }).join("") || '<li class="empty-note">当前范围没有可用组合。</li>';
 }
 
 function saveFavorites() {
@@ -410,7 +578,7 @@ function renderFavorites() {
   elements.favoriteList.innerHTML = state.combo.favorites.length
     ? state.combo.favorites.map((combination) => `
       <div class="favorite-chip">
-        <span>${escapeHtml(combinationLine(combination, state.language))}</span>
+        <span>${escapeHtml(combinationLine(combination, state.language, state.combo.promptFormat))}</span>
         <button type="button" data-remove-favorite="${combination.id}">移除</button>
       </div>
     `).join("")
@@ -433,6 +601,17 @@ function togglePin(slot, id) {
   shuffleResults({ announce: false });
 }
 
+function toggleDirectPin(slot, id) {
+  const seed = allSeeds().find((s) => s.id === id);
+  const pins = state.combo.pinned[slot];
+  const isPinned = pins.includes(id);
+  state.combo.pinned[slot] = isPinned ? pins.filter((item) => item !== id) : [...pins, id];
+  renderPinned(slot);
+  renderCombinationMath();
+  renderComboResults();
+  announceResult(isPinned ? `已取消固定「${seed ? seed.name : id}」` : `已固定「${seed ? seed.name : id}」继续摇号`);
+}
+
 function setComboCategory(slot, categoryId) {
   if (slot === "a") state.combo.categoryA = categoryId;
   else state.combo.categoryB = categoryId;
@@ -442,7 +621,7 @@ function setComboCategory(slot, categoryId) {
   state.combo.categorySort[slot] = "default";
   document.querySelector(`#pin-search-${slot}`).value = "";
   closeCategoryPickers();
-  renderComboCategoryList();
+  renderComboCategoryList({ scrollToActive: true });
   renderPinned(slot);
   renderCombinationMath();
   shuffleResults({ announce: false });
@@ -459,6 +638,18 @@ function setComboMode(mode) {
   renderComboCategoryList();
   renderCombinationMath();
   shuffleResults();
+}
+
+function setPromptFormat(format) {
+  state.combo.promptFormat = format;
+  document.querySelectorAll("[data-prompt-format]").forEach((button) => {
+    const active = button.dataset.promptFormat === format;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  renderFavorites();
+  const formatNames = { plus: "A + B 连接", comma: "AI 逗号分割", midjourney: "Midjourney 预设" };
+  announceResult(`已切换导出格式：${formatNames[format] || format}`);
 }
 
 function toggleFavorite(id) {
@@ -480,7 +671,7 @@ function downloadJson(filename, combinations) {
   }
   const payload = combinations.map((combination, index) => ({
     index: index + 1,
-    combination: combinationLine(combination, state.language),
+    combination: combinationLine(combination, state.language, state.combo.promptFormat),
     seeds: combination.seeds.map((seed) => ({
       id: seed.id,
       name: seed.name,
@@ -536,15 +727,28 @@ function renderLanguage() {
   renderPinned("b");
   renderComboResults();
   renderFavorites();
+  renderStagingBasket();
 }
 
 function bindLibraryEvents() {
+  elements.categoryFilter?.addEventListener("input", (event) => {
+    state.categoryFilter = event.target.value;
+    renderCategories();
+  });
+
+  elements.categoryFilterClear?.addEventListener("click", () => {
+    state.categoryFilter = "";
+    if (elements.categoryFilter) elements.categoryFilter.value = "";
+    renderCategories();
+    elements.categoryFilter?.focus();
+  });
+
   elements.categoryList.addEventListener("click", (event) => {
     const button = event.target.closest("[data-category]");
     if (!button) return;
     state.category = button.dataset.category;
     state.visible = pageSize;
-    renderCategories();
+    renderCategories({ scrollToActive: true });
     renderResults();
     document.querySelector(".results-panel").scrollIntoView({ behavior: "smooth", block: "start" });
   });
@@ -568,22 +772,58 @@ function bindLibraryEvents() {
   });
 
   elements.results.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-copy]");
-    if (button) copySeed(button.dataset.copy);
+    const stageBtn = event.target.closest("[data-stage]");
+    if (stageBtn) {
+      event.stopPropagation();
+      toggleStageSeed(stageBtn.dataset.stage);
+      return;
+    }
+    const copyTarget = event.target.closest("[data-copy]");
+    if (copyTarget) {
+      if (event.shiftKey) {
+        toggleStageSeed(copyTarget.dataset.copy);
+      } else {
+        copySeed(copyTarget.dataset.copy);
+      }
+    }
   });
 
   elements.loadMore.addEventListener("click", () => {
     state.visible += pageSize;
     renderResults({ announce: false });
   });
+
+  elements.copyStagedPrompt?.addEventListener("click", copyStagedPrompt);
+  elements.clearStaged?.addEventListener("click", () => {
+    state.staged = [];
+    renderStagingBasket();
+    renderResults({ announce: false });
+    announceResult("已清空暂存篮");
+  });
+  elements.stagingChips?.addEventListener("click", (event) => {
+    const unstageBtn = event.target.closest("[data-unstage]");
+    if (unstageBtn) {
+      toggleStageSeed(unstageBtn.dataset.unstage);
+    }
+  });
 }
 
 function bindComboEvents() {
+  elements.comboCategoryFilter?.addEventListener("input", (event) => {
+    state.combo.categoryFilter = event.target.value;
+    renderComboCategoryList();
+  });
+
+  elements.comboCategoryFilterClear?.addEventListener("click", () => {
+    state.combo.categoryFilter = "";
+    if (elements.comboCategoryFilter) elements.comboCategoryFilter.value = "";
+    renderComboCategoryList();
+    elements.comboCategoryFilter?.focus();
+  });
+
   document.querySelectorAll("[data-view]").forEach((button) => button.addEventListener("click", () => setView(button.dataset.view)));
   document.querySelectorAll("[data-focus-source]").forEach((button) => button.addEventListener("click", () => {
-    state.combo.focusedSource = button.dataset.focusSource;
-    renderSourceFocus();
-    renderComboCategoryList();
+    setFocusedSource(button.dataset.focusSource);
   }));
   elements.comboCategoryList.addEventListener("click", (event) => {
     const button = event.target.closest("[data-combo-category]");
@@ -638,14 +878,21 @@ function bindComboEvents() {
   }
 
   document.querySelectorAll("[data-combo-mode]").forEach((button) => button.addEventListener("click", () => setComboMode(button.dataset.comboMode)));
+  document.querySelectorAll("[data-prompt-format]").forEach((button) => button.addEventListener("click", () => setPromptFormat(button.dataset.promptFormat)));
+
   document.querySelector("#shuffle-button").addEventListener("click", () => shuffleResults());
   elements.comboResults.addEventListener("click", (event) => {
+    const directPin = event.target.closest("[data-direct-pin-id]");
+    if (directPin) {
+      toggleDirectPin(directPin.dataset.directPinSlot, directPin.dataset.directPinId);
+      return;
+    }
     const favorite = event.target.closest("[data-favorite-combination]");
     if (favorite) toggleFavorite(favorite.dataset.favoriteCombination);
     const copy = event.target.closest("[data-copy-combination]");
     if (copy) {
       const combination = state.combo.results.find((item) => item.id === copy.dataset.copyCombination);
-      copyText(combinationLine(combination, state.language), "已复制 1 组组合");
+      copyText(combinationLine(combination, state.language, state.combo.promptFormat), "已复制 1 组组合");
     }
   });
   elements.favoriteList.addEventListener("click", (event) => {
@@ -656,9 +903,9 @@ function bindComboEvents() {
     renderFavorites();
     renderComboResults();
   });
-  document.querySelector("#copy-results").addEventListener("click", () => copyText(combinationsText(state.combo.results, state.language), `已复制 ${state.combo.results.length} 组，每行一组`));
+  document.querySelector("#copy-results").addEventListener("click", () => copyText(combinationsText(state.combo.results, state.language, state.combo.promptFormat), `已复制 ${state.combo.results.length} 组，每行一组`));
   document.querySelector("#download-results").addEventListener("click", () => downloadJson("50-seeds-random-combinations.json", state.combo.results));
-  document.querySelector("#copy-favorites").addEventListener("click", () => copyText(combinationsText(state.combo.favorites, state.language), `已复制 ${state.combo.favorites.length} 组收藏`));
+  document.querySelector("#copy-favorites").addEventListener("click", () => copyText(combinationsText(state.combo.favorites, state.language, state.combo.promptFormat), `已复制 ${state.combo.favorites.length} 组收藏`));
   document.querySelector("#export-favorites").addEventListener("click", () => downloadJson("50-seeds-favorites.json", state.combo.favorites));
   document.querySelector("#clear-favorites").addEventListener("click", () => {
     state.combo.favorites = [];
@@ -669,23 +916,114 @@ function bindComboEvents() {
   });
   document.querySelector("#batch-copy").addEventListener("click", () => {
     const combinations = batchCombinations();
-    copyText(combinationsText(combinations, state.language), `已生成并复制 ${combinations.length} 组`);
+    copyText(combinationsText(combinations, state.language, state.combo.promptFormat), `已生成并复制 ${combinations.length} 组`);
   });
   document.querySelector("#batch-download").addEventListener("click", () => downloadJson("50-seeds-batch-combinations.json", batchCombinations()));
+}
+
+function setupBackToTop() {
+  if (!elements.backToTop) return;
+  let ticking = false;
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const shouldShow = window.scrollY > 380;
+        elements.backToTop.hidden = !shouldShow;
+        elements.backToTop.classList.toggle("is-visible", shouldShow);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  elements.backToTop.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 }
 
 function bindGlobalEvents() {
   document.querySelector("#theme-toggle")?.addEventListener("click", () => {
     setTheme(state.theme === "dark" ? "light" : "dark");
   });
+  setupBackToTop();
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && state.combo.openPicker) {
-      closeCategoryPickers();
+    const targetTag = document.activeElement ? document.activeElement.tagName : "";
+    const isTyping = ["INPUT", "SELECT", "TEXTAREA"].includes(targetTag) || document.activeElement?.isContentEditable;
+
+    if (event.key === "Escape") {
+      if (state.combo.openPicker) {
+        closeCategoryPickers();
+        return;
+      }
+      if (state.categoryFilter) {
+        state.categoryFilter = "";
+        if (elements.categoryFilter) elements.categoryFilter.value = "";
+        renderCategories();
+      }
+      if (state.combo.categoryFilter) {
+        state.combo.categoryFilter = "";
+        if (elements.comboCategoryFilter) elements.comboCategoryFilter.value = "";
+        renderComboCategoryList();
+      }
       return;
     }
-    if (event.key === "/" && state.view === "library" && !["INPUT", "SELECT", "TEXTAREA"].includes(document.activeElement.tagName)) {
+
+    if (isTyping) return;
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+    if (event.key === "/" && state.view === "library") {
       event.preventDefault();
       elements.search.focus();
+      return;
+    }
+
+    if (event.key === "/" && state.view === "combiner") {
+      event.preventDefault();
+      elements.comboCategoryFilter.focus();
+      return;
+    }
+
+    if (state.view === "combiner") {
+      if (event.code === "Space" || event.key === " ") {
+        event.preventDefault();
+        shuffleResults();
+        const shuffleBtn = document.querySelector("#shuffle-button");
+        if (shuffleBtn) {
+          shuffleBtn.classList.add("is-active-pulse");
+          setTimeout(() => shuffleBtn.classList.remove("is-active-pulse"), 300);
+        }
+        return;
+      }
+
+      if (event.key >= "1" && event.key <= "5") {
+        const idx = Number(event.key) - 1;
+        if (state.combo.results[idx]) {
+          event.preventDefault();
+          const combo = state.combo.results[idx];
+          const line = combinationLine(combo, state.language, state.combo.promptFormat);
+          copyText(line, `已复制第 ${event.key} 组组合`);
+          const row = elements.comboResults.children[idx];
+          if (row) {
+            row.classList.add("is-copied-pulse");
+            setTimeout(() => row.classList.remove("is-copied-pulse"), 400);
+          }
+          return;
+        }
+      }
+
+      if (event.key === "a" || event.key === "A") {
+        event.preventDefault();
+        setFocusedSource("a");
+        announceResult("已聚焦通道 A");
+        return;
+      }
+
+      if ((event.key === "b" || event.key === "B") && state.combo.mode === "double") {
+        event.preventDefault();
+        setFocusedSource("b");
+        announceResult("已聚焦通道 B");
+        return;
+      }
     }
   });
 }

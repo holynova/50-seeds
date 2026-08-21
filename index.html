@@ -56,6 +56,12 @@
             <span id="combo-category-counter">50</span>
           </div>
           <p class="category-help">点击分类，设置当前编辑的一侧。</p>
+          <div class="category-filter">
+            <label class="visually-hidden" for="combo-category-filter">筛选组合分类</label>
+            <span class="category-filter-icon" aria-hidden="true">⌕</span>
+            <input id="combo-category-filter" type="search" placeholder="快速筛选分类…" autocomplete="off">
+            <button id="combo-category-filter-clear" type="button" class="category-filter-clear" aria-label="清空筛选" hidden>×</button>
+          </div>
           <nav id="combo-category-list" class="category-list" aria-label="组合分类索引"></nav>
         </aside>
 
@@ -141,10 +147,22 @@
             <button id="shuffle-button" class="primary-action" type="button">重新随机 5 组</button>
           </div>
 
+          <div class="combo-hints" aria-label="快捷键提示">
+            <span class="hint-item"><kbd>Space</kbd> 重新摇号</span>
+            <span class="hint-item"><kbd>1</kbd>–<kbd>5</kbd> 复制单行</span>
+            <span class="hint-item"><kbd>A</kbd>/<kbd>B</kbd> 切换通道</span>
+            <span class="hint-item"><kbd>/</kbd> 聚焦检索</span>
+          </div>
+
           <section class="combo-results-section" aria-labelledby="combo-results-title">
             <div class="combo-section-heading">
               <div><h2 id="combo-results-title">随机结果</h2><span>每次生成 5 组，不重复</span></div>
               <div class="result-actions">
+                <div class="format-toggle" role="group" aria-label="提示词导出格式">
+                  <button type="button" data-prompt-format="plus" class="is-active" title="格式：词条 A + 词条 B">A + B</button>
+                  <button type="button" data-prompt-format="comma" title="格式：词条 A, 词条 B (适合 AI)">A, B</button>
+                  <button type="button" data-prompt-format="midjourney" title="格式：带 Midjourney 质量参数">MJ 预设</button>
+                </div>
                 <button id="copy-results" type="button">复制本轮 · 每行一组</button>
                 <button id="download-results" type="button">下载 JSON</button>
               </div>
@@ -163,7 +181,7 @@
                 <option value="20">20 组</option>
                 <option value="50">50 组</option>
                 <option value="100">100 组</option>
-                <option value="all">全部可用组合</option>
+                <option value="all" selected>全部可用组合</option>
               </select>
             </label>
             <button id="batch-copy" type="button">生成并复制 · 每行一组</button>
@@ -204,6 +222,12 @@
           <div class="panel-heading">
             <h2 id="category-heading">分类索引</h2>
             <span id="category-counter">50</span>
+          </div>
+          <div class="category-filter">
+            <label class="visually-hidden" for="category-filter">筛选分类</label>
+            <span class="category-filter-icon" aria-hidden="true">⌕</span>
+            <input id="category-filter" type="search" placeholder="快速筛选分类…" autocomplete="off">
+            <button id="category-filter-clear" type="button" class="category-filter-clear" aria-label="清空筛选" hidden>×</button>
           </div>
           <nav id="category-list" class="category-list" aria-label="选择种子分类"></nav>
         </aside>
@@ -248,6 +272,22 @@
         </div>
       </section>
 
+      <!-- Staging Basket Float -->
+      <aside id="staging-basket" class="staging-basket" aria-label="已暂存提示词" hidden>
+        <div class="staging-basket-inner">
+          <div class="staging-meta">
+            <span class="staging-icon" aria-hidden="true">✦</span>
+            <strong>灵感暂存篮</strong>
+            <span id="staging-count" class="staging-count">0</span>
+          </div>
+          <div id="staging-chips" class="staging-chips"></div>
+          <div class="staging-actions">
+            <button id="copy-staged-prompt" class="staging-primary" type="button">一键合并复制 Prompt</button>
+            <button id="clear-staged" class="staging-clear" type="button">清空</button>
+          </div>
+        </div>
+      </aside>
+
       <section class="methodology" aria-labelledby="method-title">
         <p class="eyebrow">RANKING NOTE</p>
         <h2 id="method-title">热度是导航，不是定论。</h2>
@@ -262,6 +302,10 @@
       <div><a href="./data/seeds.json">Raw JSON</a><a href="https://github.com/holynova/50-seeds">GitHub</a></div>
     </footer>
 
+    <button id="back-to-top" class="back-to-top" type="button" aria-label="回到顶部" hidden>
+      <span class="back-to-top-icon" aria-hidden="true">↑</span>
+      <span class="back-to-top-text">回顶部</span>
+    </button>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </body>
 </html>
