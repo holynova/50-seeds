@@ -634,7 +634,7 @@ S形曲线构图|S-Curve Composition
 水手凝望地平线|Sailor Watching the Horizon
 月球上的第一步|First Step on the Moon
 升旗的剪影群像|Group Raising a Flag
-女孩面对坦克|Lone Civilian before Tanks
+孩子放飞红色气球|Child Releasing a Red Balloon
 空中飘落的红伞|Single Red Umbrella Falling
 林间漂浮的光点|Floating Lights in a Forest
 湖面升起的雾中城堡|Castle Rising above a Misty Lake

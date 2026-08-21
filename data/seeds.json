@@ -6472,10 +6472,10 @@
           "category": "iconic_scenes",
           "categoryName": "经典画面",
           "categoryEnglishName": "Iconic Visual Moments",
-          "name": "女孩面对坦克",
-          "englishName": "Lone Civilian before Tanks",
-          "style": "借用这一经典画面的空间关系与情绪张力，替换人物、时代与环境，创作新的视觉叙事。主题：女孩面对坦克（Lone Civilian before Tanks）。",
-          "englishStyle": "Borrow the iconic moment's spatial relationship and emotional tension, then replace the people, era, and environment to create a new visual narrative. Subject: Lone Civilian before Tanks.",
+          "name": "孩子放飞红色气球",
+          "englishName": "Child Releasing a Red Balloon",
+          "style": "借用这一经典画面的空间关系与情绪张力，替换人物、时代与环境，创作新的视觉叙事。主题：孩子放飞红色气球（Child Releasing a Red Balloon）。",
+          "englishStyle": "Borrow the iconic moment's spatial relationship and emotional tension, then replace the people, era, and environment to create a new visual narrative. Subject: Child Releasing a Red Balloon.",
           "priority": 24
         },
         {
@@ -21419,10 +21419,10 @@
           "category": "vehicles",
           "categoryName": "交通工具",
           "categoryEnglishName": "Vehicles",
-          "name": "坦克",
-          "englishName": "Tank",
-          "style": "突出这一载具的比例、结构、表面材料、运动状态与所处环境。主题：坦克（Tank）。",
-          "englishStyle": "Emphasize the vehicle's proportions, structure, surface materials, motion, and environment. Subject: Tank.",
+          "name": "水上飞机",
+          "englishName": "Seaplane",
+          "style": "突出这一载具的比例、结构、表面材料、运动状态与所处环境。主题：水上飞机（Seaplane）。",
+          "englishStyle": "Emphasize the vehicle's proportions, structure, surface materials, motion, and environment. Subject: Seaplane.",
           "priority": 41
         },
         {

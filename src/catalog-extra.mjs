@@ -759,7 +759,7 @@ RGB彩光|RGB Lighting
 飞行汽车|Flying Car
 悬浮摩托|Hoverbike
 机甲步行器|Mech Walker
-坦克|Tank
+水上飞机|Seaplane
 装甲车|Armored Vehicle
 消防车|Fire Truck
 救护车|Ambulance
