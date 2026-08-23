@@ -1417,5 +1417,59 @@ M87黑洞|M87 Black Hole
 枫叶季|Autumn Foliage
 午夜太阳|Midnight Sun
 极夜|Polar Night`
+  ),
+  painting_styles: category(
+    "绘画风格", "Painting & Illustration Styles", "包含木刻版画、City Pop、浮世绘、水墨、胶片插画等 50 种高辨识度绘画与插画表现形式。", "50 distinctive painting and illustration styles spanning woodblock prints, City Pop, Ukiyo-e, ink wash, and vintage graphic traditions.",
+    "采用这种具有代表性的绘画与插画风格，呈现其特有的线条质感、笔触纹理、色彩饱和度与构图韵味。", "Render in this distinctive painting and illustration style, emphasizing its characteristic linework, brush textures, color saturation, and graphic atmosphere.", `
+木刻版画|Japanese Woodblock Print
+城市流行画风|City Pop Aesthetic
+复古赛璐珞动漫|80s Retro Anime Cel
+复古美式漫画|Vintage American Comic Book
+水墨晕染插画|Sumi-e Ink Wash Painting
+传统中国工笔|Traditional Chinese Gongbi
+经典浮世绘|Classic Ukiyo-e Woodcut
+莫比乌斯清晰线描|Ligne Claire Moebius Style
+利索印画风格|Risograph Print Style
+复古丝网版画|Vintage Silkscreen Print
+扁平矢量插画|Flat Vector Graphic Art
+铜版雕刻蚀刻|Copperplate Etching Engraving
+复古旅行招贴海报|Vintage Travel Poster Art
+童话水彩绘本|Children's Storybook Watercolor
+现代油画厚涂|Impasto Oil Paint Strokes
+炭笔素描质感|Charcoal Sketch Texture
+彩色铅笔手绘|Colored Pencil Hand Drawing
+粉彩蜡笔画风|Pastel & Crayon Chalk Art
+纸雕立体层叠|Layered Papercut Craft
+中世纪泥金手抄本|Illuminated Medieval Manuscript
+敦煌壁画矿彩|Dunhuang Mineral Pigment Mural
+拼贴混合媒介|Mixed Media Collage Art
+点描与密点画法|Stippling & Pointillism Ink
+波普斑点漫画|Ben-Day Dots Pop Art
+机械透视蓝图|Technical Blueprint Schematic
+现代等距轴测插画|Isometric Vector Illustration
+赛博朋克霓虹手绘|Cyberpunk Neon Ink Drawing
+蒸汽波复古数码|Vaporwave 90s Airbrush
+低多边形几何插画|Low Poly Faceted Illustration
+经典像素位图|16-Bit Pixel Art Graphics
+街头涂鸦与壁画|Street Graffiti & Mural Art
+迷幻摇滚海报|Psychedelic 60s Concert Poster
+包豪斯构成插画|Bauhaus Constructivist Graphic
+极简黑白线条|Minimalist Ink Line Art
+哥特暗黑插画|Dark Gothic Fantasy Illustration
+洛可可宫廷插画|Ornate Rococo Pastel Painting
+古典湿壁画质感|Antique Fresco Plaster Mural
+科学博物博物志绘图|Natural History Botanical Specimen
+传统唐卡绘画|Traditional Tibetan Thangka Art
+玻璃花窗镶嵌画|Stained Glass Mosaic Art
+复古火柴盒标签画|Vintage Matchbox Label Graphic
+浮雕木雕版画|Bas-Relief Wood Carving
+现代粗粝喷枪插画|Grungy Airbrush Retro Illustration
+波斯细密插画|Persian Miniature Gouache
+蜡染与布艺印染|Batik & Textile Dye Print
+浮空剪影皮影戏|Shadow Puppetry Silhouette Art
+蚀刻版画手绘|Cross-Hatch Crosshatching Pen Art
+暗黑克苏鲁水墨|Cosmic Horror Ink Painting
+扁平孟菲斯插画|Memphis Geometric Pattern Art
+梦幻水粉厚涂|Gouache Matte Opaque Painting`
   )
 };

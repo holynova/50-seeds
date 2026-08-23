@@ -23,7 +23,7 @@ const DIMENSIONS = [
     englishLabel: "Visual Language",
     icon: "👁️",
     color: "var(--dim-visual)",
-    ids: ["ai_art_styles", "art_movements", "compositions", "lighting_setups", "color_palettes", "materials_textures", "photography_genres", "architectural_styles", "fashion_styles"]
+    ids: ["ai_art_styles", "painting_styles", "art_movements", "compositions", "lighting_setups", "color_palettes", "materials_textures", "photography_genres", "architectural_styles", "fashion_styles"]
   },
   {
     key: "narrative",
@@ -195,9 +195,16 @@ function filteredSeeds() {
 
 function renderDimensionTabs() {
   if (!elements.categoryDimensionTabs) return;
+  const totalCount = state.data ? state.data.meta.categoryCount : 51;
   const tabs = [
-    { key: "all", label: "全部", count: 50, icon: "❖" },
-    ...DIMENSIONS.map((d) => ({ key: d.key, label: d.label, icon: d.icon, count: d.ids.length, color: d.color }))
+    { key: "all", label: "全部", count: totalCount, icon: "❖" },
+    ...DIMENSIONS.map((d) => ({
+      key: d.key,
+      label: d.label,
+      icon: d.icon,
+      count: state.data ? state.data.categories.filter((cat) => d.ids.includes(cat.id)).length : d.ids.length,
+      color: d.color
+    }))
   ];
   elements.categoryDimensionTabs.innerHTML = tabs.map((tab) => `
     <button type="button" class="dimension-tab-btn${state.dimension === tab.key ? " is-active" : ""}" data-dimension-tab="${tab.key}" style="${tab.color ? `--tab-color: ${tab.color}` : ""}">
@@ -210,9 +217,16 @@ function renderDimensionTabs() {
 
 function renderComboDimensionTabs() {
   if (!elements.comboDimensionTabs) return;
+  const totalCount = state.data ? state.data.meta.categoryCount : 51;
   const tabs = [
-    { key: "all", label: "全部", count: 50, icon: "❖" },
-    ...DIMENSIONS.map((d) => ({ key: d.key, label: d.label, icon: d.icon, count: d.ids.length, color: d.color }))
+    { key: "all", label: "全部", count: totalCount, icon: "❖" },
+    ...DIMENSIONS.map((d) => ({
+      key: d.key,
+      label: d.label,
+      icon: d.icon,
+      count: state.data ? state.data.categories.filter((cat) => d.ids.includes(cat.id)).length : d.ids.length,
+      color: d.color
+    }))
   ];
   elements.comboDimensionTabs.innerHTML = tabs.map((tab) => `
     <button type="button" class="dimension-tab-btn${state.combo.dimension === tab.key ? " is-active" : ""}" data-combo-dimension-tab="${tab.key}" style="${tab.color ? `--tab-color: ${tab.color}` : ""}">
@@ -223,7 +237,7 @@ function renderComboDimensionTabs() {
   `).join("");
 }
 
-function renderCategories({ scrollToActive = false } = {}) {
+function renderCategories({ preserveScroll = true } = {}) {
   renderDimensionTabs();
   const query = normalize(state.categoryFilter.trim());
   const activeDim = state.dimension;
@@ -247,9 +261,9 @@ function renderCategories({ scrollToActive = false } = {}) {
         <button type="button" class="category-button is-master${state.category === "all" ? " is-active" : ""}" data-category="all" aria-pressed="${state.category === "all"}">
           <span>
             <b><span class="master-badge" aria-hidden="true">★</span>全部种子</b>
-            <small lang="en">All 50 Categories</small>
+            <small lang="en">All ${state.data.meta.categoryCount} Categories</small>
           </span>
-          <em>2,500</em>
+          <em>${state.data.meta.seedCount.toLocaleString("zh-CN")}</em>
         </button>
       </div>
     `;
@@ -295,11 +309,10 @@ function renderCategories({ scrollToActive = false } = {}) {
     html = '<p class="empty-note">没有匹配的分类。</p>';
   }
 
+  const prevScroll = preserveScroll ? elements.categoryList.scrollTop : 0;
   elements.categoryList.innerHTML = html;
-
-  if (scrollToActive) {
-    const activeBtn = elements.categoryList.querySelector(".category-button.is-active");
-    if (activeBtn) activeBtn.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  if (preserveScroll && prevScroll > 0) {
+    elements.categoryList.scrollTop = prevScroll;
   }
 }
 
@@ -567,7 +580,7 @@ function comboPool(slot) {
   return effectivePool(comboCategory(slot).seeds, state.combo.pinned[slot]);
 }
 
-function renderComboCategoryList({ scrollToActive = false } = {}) {
+function renderComboCategoryList({ preserveScroll = true } = {}) {
   renderComboDimensionTabs();
   const query = normalize(state.combo.categoryFilter.trim());
   const activeDim = state.combo.dimension;
@@ -626,11 +639,10 @@ function renderComboCategoryList({ scrollToActive = false } = {}) {
     html = '<p class="empty-note">没有匹配的分类。</p>';
   }
 
+  const prevScroll = preserveScroll ? elements.comboCategoryList.scrollTop : 0;
   elements.comboCategoryList.innerHTML = html;
-
-  if (scrollToActive) {
-    const activeBtn = elements.comboCategoryList.querySelector(".category-button.is-active");
-    if (activeBtn) activeBtn.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  if (preserveScroll && prevScroll > 0) {
+    elements.comboCategoryList.scrollTop = prevScroll;
   }
 }
 
@@ -897,7 +909,19 @@ function setComboCategory(slot, categoryId) {
   state.combo.categorySort[slot] = "default";
   document.querySelector(`#pin-search-${slot}`).value = "";
   closeCategoryPickers();
-  renderComboCategoryList({ scrollToActive: true });
+
+  // In-place button updates: rock solid, 0 scroll jump
+  elements.comboCategoryList.querySelectorAll("[data-combo-category]").forEach((btn) => {
+    const catId = btn.dataset.comboCategory;
+    const isA = state.combo.categoryA === catId;
+    const isB = state.combo.mode === "double" && state.combo.categoryB === catId;
+    btn.classList.toggle("is-active", isA || isB);
+    const em = btn.querySelector("em");
+    if (em) {
+      em.textContent = isA ? "A" : isB ? "B" : (categoryById(catId)?.count || "50");
+    }
+  });
+
   renderPinned(slot);
   renderCombinationMath();
   shuffleResults({ announce: false });
@@ -1029,11 +1053,24 @@ function bindLibraryEvents() {
   elements.categoryList.addEventListener("click", (event) => {
     const button = event.target.closest("[data-category]");
     if (!button) return;
-    state.category = button.dataset.category;
+    const newCategory = button.dataset.category;
+    if (state.category === newCategory) return;
+    state.category = newCategory;
     state.visible = pageSize;
-    renderCategories({ scrollToActive: true });
+
+    // In-place button updates: completely avoids sidebar jumping or scroll shifting
+    elements.categoryList.querySelectorAll(".category-button").forEach((btn) => {
+      const isActive = btn.dataset.category === newCategory;
+      btn.classList.toggle("is-active", isActive);
+      btn.setAttribute("aria-pressed", String(isActive));
+    });
+
     renderResults();
-    document.querySelector(".results-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+
+    // Only scroll to results on mobile devices where results panel is stacked below category list
+    if (window.innerWidth <= 820) {
+      document.querySelector(".results-panel")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   });
 
   elements.search.addEventListener("input", () => {

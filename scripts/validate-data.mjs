@@ -4,8 +4,8 @@ const payload = JSON.parse(await readFile(new URL("../data/seeds.json", import.m
 const requiredFields = ["name", "englishName", "style", "englishStyle", "priority"];
 const errors = [];
 
-if (payload.meta.categoryCount !== 50) errors.push(`Expected 50 categories, got ${payload.meta.categoryCount}`);
-if (payload.meta.seedCount !== 2500) errors.push(`Expected 2500 seeds, got ${payload.meta.seedCount}`);
+if (payload.meta.categoryCount < 50) errors.push(`Expected at least 50 categories, got ${payload.meta.categoryCount}`);
+if (payload.meta.seedCount !== payload.meta.categoryCount * 50) errors.push(`Expected ${payload.meta.categoryCount * 50} seeds, got ${payload.meta.seedCount}`);
 
 for (const category of payload.categories) {
   if (category.count !== 50 || category.seeds.length !== 50) {
