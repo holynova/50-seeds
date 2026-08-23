@@ -238,7 +238,8 @@ h1, h2, h3, p { margin-top: 0; }
   position: sticky;
   top: 20px;
   align-self: start;
-  max-height: calc(100vh - 40px);
+  max-height: calc(100vh - 140px);
+  max-height: calc(100dvh - 140px);
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -487,7 +488,8 @@ h1, h2, h3, p { margin-top: 0; }
   overflow-x: hidden;
   flex: 1;
   min-height: 0;
-  padding-right: 2px;
+  padding-right: 4px;
+  padding-bottom: 28px;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
@@ -742,7 +744,8 @@ footer div { display: flex; gap: 20px; }
   position: sticky;
   top: 20px;
   align-self: start;
-  max-height: calc(100vh - 40px);
+  max-height: calc(100vh - 132px);
+  max-height: calc(100dvh - 132px);
   display: flex;
   flex-direction: column;
   min-height: 0;
