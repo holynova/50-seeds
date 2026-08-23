@@ -409,11 +409,11 @@ function copySelectedLines() {
       return;
     }
     const text = seedsLinesText(seeds, state.language);
-    copyText(text, `暂无选中项，已为您复制当前 ${seeds.length} 条种子（一行一个）到剪贴板！`);
+    copyText(text, `暂无选中项，已复制当前 ${seeds.length} 条种子（一行一个）`);
     return;
   }
   const text = seedsLinesText(state.staged, state.language);
-  copyText(text, `已复制 ${state.staged.length} 条已选种子（一行一个）到剪贴板！`);
+  copyText(text, `已复制 ${state.staged.length} 条已选种子（一行一个）`);
 }
 
 function copyAllLines() {
@@ -423,7 +423,7 @@ function copyAllLines() {
     return;
   }
   const text = seedsLinesText(seeds, state.language);
-  copyText(text, `已复制全部 ${seeds.length} 条种子（一行一个）到剪贴板！`);
+  copyText(text, `已复制全部 ${seeds.length} 条种子（一行一个）`);
 }
 
 function renderResults({ announce = true } = {}) {
@@ -532,7 +532,7 @@ function copyStagedPrompt() {
   } else {
     text = state.staged.map((s) => seedLabel(s, state.language)).join(", ");
   }
-  copyText(text, `已合并复制 ${state.staged.length} 个已暂存提示词！`);
+  copyText(text, `已合并复制 ${state.staged.length} 条暂存种子`);
 }
 
 function setView(view) {
@@ -880,7 +880,7 @@ function shuffleResults({ announce = true } = {}) {
   const poolB = state.combo.mode === "double" ? comboPool("b") : null;
   state.combo.results = randomCombinations(poolA, poolB, 5);
   renderComboResults();
-  if (announce) announceResult(`已生成 ${state.combo.results.length} 组新灵感`);
+  if (announce) announceResult(`已生成 ${state.combo.results.length} 组组合`);
 }
 
 function togglePin(slot, id) {
