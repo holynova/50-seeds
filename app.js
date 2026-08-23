@@ -8,12 +8,26 @@ import {
   seedLabel
 } from "./src/combiner.mjs";
 
+const ICONS = {
+  all: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>`,
+  creator: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>`,
+  visual: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`,
+  narrative: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18M17 3v18M3 12h18M3 7.5h4M3 16.5h4M17 7.5h4M17 16.5h4"/></svg>`,
+  space: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>`,
+  mood: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`,
+  other: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>`,
+  pin: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V5a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>`,
+  pinSolid: `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V5a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>`,
+  sun: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`,
+  moon: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`
+};
+
 const DIMENSIONS = [
   {
     key: "creator",
     label: "创作者",
     englishLabel: "Creators",
-    icon: "🎨",
+    icon: ICONS.creator,
     color: "var(--dim-creator)",
     ids: ["artists", "mangaka", "architects", "film_directors", "illustrators", "fashion_designers", "graphic_designers", "photographers"]
   },
@@ -21,7 +35,7 @@ const DIMENSIONS = [
     key: "visual",
     label: "视觉语言",
     englishLabel: "Visual Language",
-    icon: "👁️",
+    icon: ICONS.visual,
     color: "var(--dim-visual)",
     ids: ["ai_art_styles", "painting_styles", "art_movements", "compositions", "lighting_setups", "color_palettes", "materials_textures", "photography_genres", "architectural_styles", "fashion_styles"]
   },
@@ -29,7 +43,7 @@ const DIMENSIONS = [
     key: "narrative",
     label: "叙事母题",
     englishLabel: "Narrative & Mythos",
-    icon: "🎬",
+    icon: ICONS.narrative,
     color: "var(--dim-narrative)",
     ids: ["films", "games", "tv_series", "manga", "paintings", "novels", "iconic_scenes", "anime_characters", "game_characters", "mythology", "fantasy_creatures", "historical_civilizations", "sci_fi_concepts"]
   },
@@ -37,7 +51,7 @@ const DIMENSIONS = [
     key: "space",
     label: "空间物件",
     englishLabel: "Space & Artifacts",
-    icon: "🏙️",
+    icon: ICONS.space,
     color: "var(--dim-space)",
     ids: ["cities", "landmarks", "landscapes", "interior_spaces", "vehicles", "props_objects", "space_objects", "food_dishes", "musical_instruments", "animals", "plants"]
   },
@@ -45,7 +59,7 @@ const DIMENSIONS = [
     key: "mood",
     label: "情绪自然",
     englishLabel: "Mood & Nature",
-    icon: "🎭",
+    icon: ICONS.mood,
     color: "var(--dim-mood)",
     ids: ["women", "famous_people", "singers", "screen_stars", "professions", "emotions_atmospheres", "weather_seasons", "natural_phenomena", "festivals"]
   }
@@ -55,7 +69,7 @@ function getCategoryDimension(categoryId) {
   for (const dim of DIMENSIONS) {
     if (dim.ids.includes(categoryId)) return dim;
   }
-  return { key: "other", label: "其他", englishLabel: "Other", icon: "✦", color: "var(--accent)", ids: [] };
+  return { key: "other", label: "其他", englishLabel: "Other", icon: ICONS.other, color: "var(--accent)", ids: [] };
 }
 
 const state = {
@@ -197,7 +211,7 @@ function renderDimensionTabs() {
   if (!elements.categoryDimensionTabs) return;
   const totalCount = state.data ? state.data.meta.categoryCount : 51;
   const tabs = [
-    { key: "all", label: "全部", count: totalCount, icon: "❖" },
+    { key: "all", label: "全部", count: totalCount, icon: ICONS.all },
     ...DIMENSIONS.map((d) => ({
       key: d.key,
       label: d.label,
@@ -209,7 +223,7 @@ function renderDimensionTabs() {
   elements.categoryDimensionTabs.innerHTML = tabs.map((tab) => `
     <button type="button" class="dimension-tab-btn${state.dimension === tab.key ? " is-active" : ""}" data-dimension-tab="${tab.key}" style="${tab.color ? `--tab-color: ${tab.color}` : ""}">
       <span class="tab-icon">${tab.icon}</span>
-      <span>${tab.label}</span>
+      <span class="tab-label">${tab.label}</span>
       <small>${tab.count}</small>
     </button>
   `).join("");
@@ -219,7 +233,7 @@ function renderComboDimensionTabs() {
   if (!elements.comboDimensionTabs) return;
   const totalCount = state.data ? state.data.meta.categoryCount : 51;
   const tabs = [
-    { key: "all", label: "全部", count: totalCount, icon: "❖" },
+    { key: "all", label: "全部", count: totalCount, icon: ICONS.all },
     ...DIMENSIONS.map((d) => ({
       key: d.key,
       label: d.label,
@@ -231,7 +245,7 @@ function renderComboDimensionTabs() {
   elements.comboDimensionTabs.innerHTML = tabs.map((tab) => `
     <button type="button" class="dimension-tab-btn${state.combo.dimension === tab.key ? " is-active" : ""}" data-combo-dimension-tab="${tab.key}" style="${tab.color ? `--tab-color: ${tab.color}` : ""}">
       <span class="tab-icon">${tab.icon}</span>
-      <span>${tab.label}</span>
+      <span class="tab-label">${tab.label}</span>
       <small>${tab.count}</small>
     </button>
   `).join("");
@@ -260,7 +274,7 @@ function renderCategories({ preserveScroll = true } = {}) {
       <div class="category-master-item">
         <button type="button" class="category-button is-master${state.category === "all" ? " is-active" : ""}" data-category="all" aria-pressed="${state.category === "all"}">
           <span>
-            <b><span class="master-badge" aria-hidden="true">★</span>全部种子</b>
+            <b><span class="master-badge" aria-hidden="true">${ICONS.all}</span>全部种子</b>
             <small lang="en">All ${state.data.meta.categoryCount} Categories</small>
           </span>
           <em>${state.data.meta.seedCount.toLocaleString("zh-CN")}</em>
@@ -557,7 +571,7 @@ function renderTheme() {
   if (!toggle) return;
   toggle.setAttribute("aria-pressed", String(isLight));
   toggle.setAttribute("aria-label", isLight ? "切换到夜间模式" : "切换到日间模式");
-  toggle.querySelector(".theme-toggle-icon").textContent = isLight ? "☾" : "☼";
+  toggle.querySelector(".theme-toggle-icon").innerHTML = isLight ? ICONS.moon : ICONS.sun;
   toggle.querySelector(".theme-toggle-label").textContent = isLight ? "夜间模式" : "日间模式";
   document.querySelector("#theme-color")?.setAttribute("content", isLight ? "#f7f5f0" : "#211d19");
 }
@@ -819,7 +833,7 @@ function renderComboResults() {
         <div class="combo-term-meta">
           <small>${escapeHtml(state.language === "en" ? seedA.categoryEnglishName : seedA.categoryName)}</small>
           <button type="button" class="direct-pin-btn${isPinnedA ? " is-pinned" : ""}" data-direct-pin-slot="a" data-direct-pin-id="${seedA.id}" title="${isPinnedA ? "取消固定该词条" : "固定该词条继续摇号"}" aria-pressed="${isPinnedA}">
-            <span class="pin-icon" aria-hidden="true">${isPinnedA ? "📌" : "📍"}</span>
+            <span class="pin-icon" aria-hidden="true">${isPinnedA ? ICONS.pinSolid : ICONS.pin}</span>
             <span class="pin-text">${isPinnedA ? "已固定" : "固定"}</span>
           </button>
         </div>
@@ -835,7 +849,7 @@ function renderComboResults() {
         <div class="combo-term-meta">
           <small>${escapeHtml(state.language === "en" ? seedB.categoryEnglishName : seedB.categoryName)}</small>
           <button type="button" class="direct-pin-btn${isPinnedB ? " is-pinned" : ""}" data-direct-pin-slot="b" data-direct-pin-id="${seedB.id}" title="${isPinnedB ? "取消固定该词条" : "固定该词条继续摇号"}" aria-pressed="${isPinnedB}">
-            <span class="pin-icon" aria-hidden="true">${isPinnedB ? "📌" : "📍"}</span>
+            <span class="pin-icon" aria-hidden="true">${isPinnedB ? ICONS.pinSolid : ICONS.pin}</span>
             <span class="pin-text">${isPinnedB ? "已固定" : "固定"}</span>
           </button>
         </div>
