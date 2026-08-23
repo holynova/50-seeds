@@ -368,6 +368,170 @@ h1, h2, h3, p { margin-top: 0; }
   background: var(--accent);
 }
 
+/* Dimension Filter Tabs */
+.dimension-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 6px 0 10px;
+  flex-shrink: 0;
+}
+
+.dimension-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  padding: 2px 7px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 550;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 120ms ease;
+}
+
+.dimension-tab-btn .tab-icon {
+  font-size: 11px;
+  line-height: 1;
+}
+
+.dimension-tab-btn small {
+  color: var(--faint);
+  font-size: 9.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dimension-tab-btn:hover {
+  color: var(--paper);
+  border-color: var(--accent);
+  background: var(--surface-raised);
+}
+
+.dimension-tab-btn.is-active {
+  background: var(--tab-color, var(--accent));
+  color: var(--accent-ink);
+  border-color: transparent;
+  font-weight: 750;
+}
+
+.dimension-tab-btn.is-active .tab-icon {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .2));
+}
+
+.dimension-tab-btn.is-active small {
+  color: var(--accent-ink);
+  opacity: 0.85;
+}
+
+/* Master Category Card (All Seeds) */
+.category-master-item {
+  margin-bottom: 6px;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  border: 1px solid var(--hairline-strong);
+  background: color-mix(in oklch, var(--surface-raised) 70%, transparent);
+}
+
+.category-button.is-master {
+  min-height: 48px;
+  border-bottom: 0;
+  background: transparent;
+}
+
+.category-button.is-master .master-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  color: var(--accent);
+  font-size: 11px;
+}
+
+.category-button.is-master.is-active {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.category-button.is-master.is-active b,
+.category-button.is-master.is-active em,
+.category-button.is-master.is-active small,
+.category-button.is-master.is-active .master-badge {
+  color: var(--accent-ink);
+}
+
+/* Category Group Sections */
+.category-group-section {
+  display: grid;
+  margin-bottom: 12px;
+}
+
+.category-group-header {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  margin: 4px 0 2px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--hairline);
+  border-left: 3px solid var(--dim-color, var(--accent));
+  border-radius: 0 var(--radius-xs) 0 0;
+}
+
+.group-header-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.group-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.group-name {
+  color: var(--paper);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.group-en {
+  color: var(--faint);
+  font-size: 9px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.group-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+  border: 1px solid var(--hairline);
+  color: var(--faint);
+  font-size: 9.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.category-group-list {
+  display: grid;
+}
+
 .category-list {
   display: grid;
   overflow-y: auto;
@@ -749,6 +913,37 @@ footer div { display: flex; gap: 20px; }
   overflow-x: hidden;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+}
+.picker-group-section {
+  display: grid;
+}
+.picker-group-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  margin: 6px 0 2px;
+  background: var(--surface-raised);
+  border-bottom: 1px solid var(--hairline);
+  border-left: 3px solid var(--dim-color, var(--accent));
+  color: var(--paper);
+  font-size: 11px;
+  font-weight: 700;
+}
+.picker-group-header small {
+  color: var(--faint);
+  font-size: 9px;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-left: 4px;
+}
+.picker-group-count {
+  font-size: 9px;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
 }
 .picker-option {
   width: 100%;
@@ -1296,6 +1491,22 @@ footer div { display: flex; gap: 20px; }
   .category-panel, .combo-category-panel { position: static; max-height: none; margin-bottom: 20px; display: block; overflow: visible; }
   .panel-heading { padding-bottom: 12px; }
   .category-filter { margin: 8px 0 10px; }
+  .dimension-tabs {
+    flex-wrap: nowrap;
+    margin: 0 -20px 10px;
+    padding: 2px 20px 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .dimension-tabs::-webkit-scrollbar { display: none; }
+  .dimension-tab-btn { flex-shrink: 0; min-height: 28px; padding: 3px 10px; font-size: 11px; }
+  .category-master-item { flex-shrink: 0; margin-bottom: 0; display: inline-flex; border: 0; background: transparent; }
+  .category-button.is-master { min-height: 42px; padding: 6px 14px; border: 1px solid var(--hairline); border-radius: var(--radius-pill); }
+  .category-group-section { display: flex; flex-direction: column; flex-shrink: 0; }
+  .category-group-header { position: static; padding: 0 4px 6px; background: transparent; border-bottom: 0; border-left: 0; }
+  .category-group-list { display: flex; gap: 8px; }
   .category-list, .combo-category-panel .category-list {
     display: flex;
     gap: 8px;

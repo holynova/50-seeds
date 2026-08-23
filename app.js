@@ -8,25 +8,61 @@ import {
   seedLabel
 } from "./src/combiner.mjs";
 
-const DIMENSIONS = {
-  creator: { label: "创作者", color: "var(--dim-creator)", ids: ["artists", "mangaka", "architects", "film_directors", "illustrators", "fashion_designers", "graphic_designers", "photographers"] },
-  visual: { label: "视觉语言", color: "var(--dim-visual)", ids: ["ai_art_styles", "art_movements", "compositions", "lighting_setups", "color_palettes", "materials_textures", "photography_genres", "architectural_styles", "fashion_styles"] },
-  narrative: { label: "叙事母题", color: "var(--dim-narrative)", ids: ["films", "games", "tv_series", "manga", "paintings", "novels", "iconic_scenes", "anime_characters", "game_characters", "mythology", "fantasy_creatures", "historical_civilizations", "sci_fi_concepts"] },
-  space: { label: "空间物件", color: "var(--dim-space)", ids: ["cities", "landmarks", "landscapes", "interior_spaces", "vehicles", "props_objects", "space_objects", "food_dishes", "musical_instruments", "animals", "plants"] },
-  mood: { label: "情绪自然", color: "var(--dim-mood)", ids: ["women", "famous_people", "singers", "screen_stars", "professions", "emotions_atmospheres", "weather_seasons", "natural_phenomena", "festivals"] }
-};
+const DIMENSIONS = [
+  {
+    key: "creator",
+    label: "创作者",
+    englishLabel: "Creators",
+    icon: "🎨",
+    color: "var(--dim-creator)",
+    ids: ["artists", "mangaka", "architects", "film_directors", "illustrators", "fashion_designers", "graphic_designers", "photographers"]
+  },
+  {
+    key: "visual",
+    label: "视觉语言",
+    englishLabel: "Visual Language",
+    icon: "👁️",
+    color: "var(--dim-visual)",
+    ids: ["ai_art_styles", "art_movements", "compositions", "lighting_setups", "color_palettes", "materials_textures", "photography_genres", "architectural_styles", "fashion_styles"]
+  },
+  {
+    key: "narrative",
+    label: "叙事母题",
+    englishLabel: "Narrative & Mythos",
+    icon: "🎬",
+    color: "var(--dim-narrative)",
+    ids: ["films", "games", "tv_series", "manga", "paintings", "novels", "iconic_scenes", "anime_characters", "game_characters", "mythology", "fantasy_creatures", "historical_civilizations", "sci_fi_concepts"]
+  },
+  {
+    key: "space",
+    label: "空间物件",
+    englishLabel: "Space & Artifacts",
+    icon: "🏙️",
+    color: "var(--dim-space)",
+    ids: ["cities", "landmarks", "landscapes", "interior_spaces", "vehicles", "props_objects", "space_objects", "food_dishes", "musical_instruments", "animals", "plants"]
+  },
+  {
+    key: "mood",
+    label: "情绪自然",
+    englishLabel: "Mood & Nature",
+    icon: "🎭",
+    color: "var(--dim-mood)",
+    ids: ["women", "famous_people", "singers", "screen_stars", "professions", "emotions_atmospheres", "weather_seasons", "natural_phenomena", "festivals"]
+  }
+];
 
 function getCategoryDimension(categoryId) {
-  for (const [key, dim] of Object.entries(DIMENSIONS)) {
-    if (dim.ids.includes(categoryId)) return { key, ...dim };
+  for (const dim of DIMENSIONS) {
+    if (dim.ids.includes(categoryId)) return dim;
   }
-  return { key: "other", label: "其他", color: "var(--accent)" };
+  return { key: "other", label: "其他", englishLabel: "Other", icon: "✦", color: "var(--accent)", ids: [] };
 }
 
 const state = {
   data: null,
   category: "all",
   categoryFilter: "",
+  dimension: "all",
   search: "",
   sort: "priority",
   language: "both",
@@ -40,6 +76,7 @@ const state = {
     categoryB: "lighting_setups",
     focusedSource: "a",
     categoryFilter: "",
+    dimension: "all",
     categorySearch: { a: "", b: "" },
     categorySort: { a: "default", b: "default" },
     openPicker: null,
@@ -57,6 +94,7 @@ const elements = {
   categoryCounter: document.querySelector("#category-counter"),
   categoryFilter: document.querySelector("#category-filter"),
   categoryFilterClear: document.querySelector("#category-filter-clear"),
+  categoryDimensionTabs: document.querySelector("#category-dimension-tabs"),
   search: document.querySelector("#search-input"),
   sort: document.querySelector("#sort-select"),
   activeCategory: document.querySelector("#active-category"),
@@ -79,6 +117,7 @@ const elements = {
   comboCategoryCounter: document.querySelector("#combo-category-counter"),
   comboCategoryFilter: document.querySelector("#combo-category-filter"),
   comboCategoryFilterClear: document.querySelector("#combo-category-filter-clear"),
+  comboDimensionTabs: document.querySelector("#combo-dimension-tabs"),
   categoryPickers: {
     a: {
       root: document.querySelector('[data-picker-slot="a"]'),
@@ -154,15 +193,45 @@ function filteredSeeds() {
   });
 }
 
+function renderDimensionTabs() {
+  if (!elements.categoryDimensionTabs) return;
+  const tabs = [
+    { key: "all", label: "全部", count: 50, icon: "❖" },
+    ...DIMENSIONS.map((d) => ({ key: d.key, label: d.label, icon: d.icon, count: d.ids.length, color: d.color }))
+  ];
+  elements.categoryDimensionTabs.innerHTML = tabs.map((tab) => `
+    <button type="button" class="dimension-tab-btn${state.dimension === tab.key ? " is-active" : ""}" data-dimension-tab="${tab.key}" style="${tab.color ? `--tab-color: ${tab.color}` : ""}">
+      <span class="tab-icon">${tab.icon}</span>
+      <span>${tab.label}</span>
+      <small>${tab.count}</small>
+    </button>
+  `).join("");
+}
+
+function renderComboDimensionTabs() {
+  if (!elements.comboDimensionTabs) return;
+  const tabs = [
+    { key: "all", label: "全部", count: 50, icon: "❖" },
+    ...DIMENSIONS.map((d) => ({ key: d.key, label: d.label, icon: d.icon, count: d.ids.length, color: d.color }))
+  ];
+  elements.comboDimensionTabs.innerHTML = tabs.map((tab) => `
+    <button type="button" class="dimension-tab-btn${state.combo.dimension === tab.key ? " is-active" : ""}" data-combo-dimension-tab="${tab.key}" style="${tab.color ? `--tab-color: ${tab.color}` : ""}">
+      <span class="tab-icon">${tab.icon}</span>
+      <span>${tab.label}</span>
+      <small>${tab.count}</small>
+    </button>
+  `).join("");
+}
+
 function renderCategories({ scrollToActive = false } = {}) {
+  renderDimensionTabs();
   const query = normalize(state.categoryFilter.trim());
-  const allItem = { id: "all", name: "全部种子", englishName: "All", count: state.data.meta.seedCount };
+  const activeDim = state.dimension;
+
   const filteredCategories = state.data.categories.filter((cat) => {
     if (!query) return true;
     return [cat.id, cat.name, cat.englishName].some((val) => normalize(val).includes(query));
   });
-  const showAll = !query || "全部种子all".includes(query);
-  const buttons = showAll ? [allItem, ...filteredCategories] : filteredCategories;
 
   if (elements.categoryFilterClear) {
     elements.categoryFilterClear.hidden = !query;
@@ -171,18 +240,62 @@ function renderCategories({ scrollToActive = false } = {}) {
     elements.categoryCounter.textContent = query ? filteredCategories.length : state.data.meta.categoryCount;
   }
 
-  elements.categoryList.innerHTML = buttons.length ? buttons.map((category) => {
-    const dim = getCategoryDimension(category.id);
-    return `
-      <button type="button" class="category-button${state.category === category.id ? " is-active" : ""}" data-category="${escapeHtml(category.id)}" aria-pressed="${state.category === category.id}">
-        <span>
-          <b><i class="dimension-dot" style="--dim-color: ${dim.color}" title="${dim.label}"></i>${escapeHtml(category.name)}</b>
-          <small lang="en">${escapeHtml(category.englishName)}</small>
-        </span>
-        <em>${category.count}</em>
-      </button>
+  let html = "";
+  if (!query && activeDim === "all") {
+    html += `
+      <div class="category-master-item">
+        <button type="button" class="category-button is-master${state.category === "all" ? " is-active" : ""}" data-category="all" aria-pressed="${state.category === "all"}">
+          <span>
+            <b><span class="master-badge" aria-hidden="true">★</span>全部种子</b>
+            <small lang="en">All 50 Categories</small>
+          </span>
+          <em>2,500</em>
+        </button>
+      </div>
     `;
-  }).join("") : '<p class="empty-note">没有匹配的分类。</p>';
+  }
+
+  const dimensionsToRender = activeDim === "all"
+    ? DIMENSIONS
+    : DIMENSIONS.filter((d) => d.key === activeDim);
+
+  for (const dim of dimensionsToRender) {
+    const catsInDim = filteredCategories.filter((cat) => dim.ids.includes(cat.id));
+    if (!catsInDim.length) continue;
+
+    html += `
+      <section class="category-group-section" data-dimension="${dim.key}">
+        <div class="category-group-header" style="--dim-color: ${dim.color}">
+          <div class="group-header-left">
+            <span class="group-icon">${dim.icon}</span>
+            <strong class="group-name">${dim.label}</strong>
+            <small class="group-en" lang="en">${dim.englishLabel}</small>
+          </div>
+          <span class="group-badge">${catsInDim.length}</span>
+        </div>
+        <div class="category-group-list">
+          ${catsInDim.map((category) => {
+            const isActive = state.category === category.id;
+            return `
+              <button type="button" class="category-button${isActive ? " is-active" : ""}" data-category="${escapeHtml(category.id)}" aria-pressed="${isActive}">
+                <span>
+                  <b><i class="dimension-dot" style="--dim-color: ${dim.color}" title="${dim.label}"></i>${escapeHtml(category.name)}</b>
+                  <small lang="en">${escapeHtml(category.englishName)}</small>
+                </span>
+                <em>${category.count}</em>
+              </button>
+            `;
+          }).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  if (!html) {
+    html = '<p class="empty-note">没有匹配的分类。</p>';
+  }
+
+  elements.categoryList.innerHTML = html;
 
   if (scrollToActive) {
     const activeBtn = elements.categoryList.querySelector(".category-button.is-active");
@@ -455,7 +568,10 @@ function comboPool(slot) {
 }
 
 function renderComboCategoryList({ scrollToActive = false } = {}) {
+  renderComboDimensionTabs();
   const query = normalize(state.combo.categoryFilter.trim());
+  const activeDim = state.combo.dimension;
+
   const filtered = state.data.categories.filter((category) => {
     if (!query) return true;
     return [category.id, category.name, category.englishName].some((val) => normalize(val).includes(query));
@@ -468,20 +584,49 @@ function renderComboCategoryList({ scrollToActive = false } = {}) {
     elements.comboCategoryCounter.textContent = query ? filtered.length : state.data.meta.categoryCount;
   }
 
-  elements.comboCategoryList.innerHTML = filtered.length ? filtered.map((category) => {
-    const isA = state.combo.categoryA === category.id;
-    const isB = state.combo.mode === "double" && state.combo.categoryB === category.id;
-    const dim = getCategoryDimension(category.id);
-    return `
-      <button type="button" class="category-button${isA || isB ? " is-active" : ""}" data-combo-category="${category.id}" aria-label="将 ${escapeHtml(category.name)} 设置为分类 ${state.combo.focusedSource.toLocaleUpperCase()}">
-        <span>
-          <b><i class="dimension-dot" style="--dim-color: ${dim.color}" title="${dim.label}"></i>${escapeHtml(category.name)}</b>
-          <small lang="en">${escapeHtml(category.englishName)}</small>
-        </span>
-        <em>${isA ? "A" : isB ? "B" : category.count}</em>
-      </button>
+  const dimensionsToRender = activeDim === "all"
+    ? DIMENSIONS
+    : DIMENSIONS.filter((d) => d.key === activeDim);
+
+  let html = "";
+  for (const dim of dimensionsToRender) {
+    const catsInDim = filtered.filter((cat) => dim.ids.includes(cat.id));
+    if (!catsInDim.length) continue;
+
+    html += `
+      <section class="category-group-section" data-dimension="${dim.key}">
+        <div class="category-group-header" style="--dim-color: ${dim.color}">
+          <div class="group-header-left">
+            <span class="group-icon">${dim.icon}</span>
+            <strong class="group-name">${dim.label}</strong>
+            <small class="group-en" lang="en">${dim.englishLabel}</small>
+          </div>
+          <span class="group-badge">${catsInDim.length}</span>
+        </div>
+        <div class="category-group-list">
+          ${catsInDim.map((category) => {
+            const isA = state.combo.categoryA === category.id;
+            const isB = state.combo.mode === "double" && state.combo.categoryB === category.id;
+            return `
+              <button type="button" class="category-button${isA || isB ? " is-active" : ""}" data-combo-category="${category.id}" aria-label="将 ${escapeHtml(category.name)} 设置为分类 ${state.combo.focusedSource.toLocaleUpperCase()}">
+                <span>
+                  <b><i class="dimension-dot" style="--dim-color: ${dim.color}" title="${dim.label}"></i>${escapeHtml(category.name)}</b>
+                  <small lang="en">${escapeHtml(category.englishName)}</small>
+                </span>
+                <em>${isA ? "A" : isB ? "B" : category.count}</em>
+              </button>
+            `;
+          }).join("")}
+        </div>
+      </section>
     `;
-  }).join("") : '<p class="empty-note">没有匹配的分类。</p>';
+  }
+
+  if (!html) {
+    html = '<p class="empty-note">没有匹配的分类。</p>';
+  }
+
+  elements.comboCategoryList.innerHTML = html;
 
   if (scrollToActive) {
     const activeBtn = elements.comboCategoryList.querySelector(".category-button.is-active");
@@ -510,20 +655,57 @@ function renderCategoryPicker(slot) {
   picker.current.innerHTML = `<strong>${escapeHtml(selected.name)}</strong><span>${escapeHtml(selected.englishName)} · ${selected.count}</span>`;
   picker.menu.hidden = !isOpen;
   picker.search.value = state.combo.categorySearch[slot];
-  picker.options.innerHTML = sortedComboCategories(slot).map((category) => {
-    const isSelected = category.id === selectedId;
-    const isOtherSide = state.combo.mode === "double" && ((slot === "a" && category.id === state.combo.categoryB) || (slot === "b" && category.id === state.combo.categoryA));
-    const dim = getCategoryDimension(category.id);
-    return `
-      <button type="button" class="picker-option${isSelected ? " is-selected" : ""}" data-picker-slot="${slot}" data-picker-category="${category.id}" role="option" aria-selected="${isSelected}">
-        <span>
-          <b><i class="dimension-dot" style="--dim-color: ${dim.color}" title="${dim.label}"></i>${escapeHtml(category.name)}</b>
-          <small>${escapeHtml(category.englishName)} · ${category.id}</small>
-        </span>
-        <em>${isSelected ? "当前" : isOtherSide ? "另一侧" : `${category.count} 项`}</em>
-      </button>
-    `;
-  }).join("") || '<p class="empty-note">没有匹配的分类。</p>';
+  
+  const sort = state.combo.categorySort[slot];
+  const query = normalize(state.combo.categorySearch[slot]).trim();
+
+  let optionsHtml = "";
+  if (sort === "default" && !query) {
+    for (const dim of DIMENSIONS) {
+      const catsInDim = state.data.categories.filter((cat) => dim.ids.includes(cat.id));
+      if (!catsInDim.length) continue;
+      optionsHtml += `
+        <div class="picker-group-section">
+          <div class="picker-group-header" style="--dim-color: ${dim.color}">
+            <span>${dim.icon} ${dim.label} <small lang="en">${dim.englishLabel}</small></span>
+            <span class="picker-group-count">${catsInDim.length}</span>
+          </div>
+          <div class="picker-group-items">
+            ${catsInDim.map((category) => {
+              const isSelected = category.id === selectedId;
+              const isOtherSide = state.combo.mode === "double" && ((slot === "a" && category.id === state.combo.categoryB) || (slot === "b" && category.id === state.combo.categoryA));
+              return `
+                <button type="button" class="picker-option${isSelected ? " is-selected" : ""}" data-picker-slot="${slot}" data-picker-category="${category.id}" role="option" aria-selected="${isSelected}">
+                  <span>
+                    <b><i class="dimension-dot" style="--dim-color: ${dim.color}"></i>${escapeHtml(category.name)}</b>
+                    <small>${escapeHtml(category.englishName)} · ${category.id}</small>
+                  </span>
+                  <em>${isSelected ? "当前" : isOtherSide ? "另一侧" : `${category.count} 项`}</em>
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+  } else {
+    optionsHtml = sortedComboCategories(slot).map((category) => {
+      const isSelected = category.id === selectedId;
+      const isOtherSide = state.combo.mode === "double" && ((slot === "a" && category.id === state.combo.categoryB) || (slot === "b" && category.id === state.combo.categoryA));
+      const dim = getCategoryDimension(category.id);
+      return `
+        <button type="button" class="picker-option${isSelected ? " is-selected" : ""}" data-picker-slot="${slot}" data-picker-category="${category.id}" role="option" aria-selected="${isSelected}">
+          <span>
+            <b><i class="dimension-dot" style="--dim-color: ${dim.color}" title="${dim.label}"></i>${escapeHtml(category.name)}</b>
+            <small>${escapeHtml(category.englishName)} · ${category.id}</small>
+          </span>
+          <em>${isSelected ? "当前" : isOtherSide ? "另一侧" : `${category.count} 项`}</em>
+        </button>
+      `;
+    }).join("") || '<p class="empty-note">没有匹配的分类。</p>';
+  }
+
+  picker.options.innerHTML = optionsHtml;
   picker.root.querySelectorAll("[data-picker-sort]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.pickerSort === state.combo.categorySort[slot]);
   });
@@ -825,6 +1007,13 @@ function renderLanguage() {
 }
 
 function bindLibraryEvents() {
+  elements.categoryDimensionTabs?.addEventListener("click", (event) => {
+    const tabBtn = event.target.closest("[data-dimension-tab]");
+    if (!tabBtn) return;
+    state.dimension = tabBtn.dataset.dimensionTab;
+    renderCategories();
+  });
+
   elements.categoryFilter?.addEventListener("input", (event) => {
     state.categoryFilter = event.target.value;
     renderCategories();
@@ -910,6 +1099,13 @@ function bindLibraryEvents() {
 }
 
 function bindComboEvents() {
+  elements.comboDimensionTabs?.addEventListener("click", (event) => {
+    const tabBtn = event.target.closest("[data-combo-dimension-tab]");
+    if (!tabBtn) return;
+    state.combo.dimension = tabBtn.dataset.comboDimensionTab;
+    renderComboCategoryList();
+  });
+
   elements.comboCategoryFilter?.addEventListener("input", (event) => {
     state.combo.categoryFilter = event.target.value;
     renderComboCategoryList();
