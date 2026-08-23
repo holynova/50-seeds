@@ -433,7 +433,9 @@ function renderResults({ announce = true } = {}) {
     : categoryById(state.category);
 
   elements.activeCategory.textContent = state.language === "en" ? category.englishName : category.name;
-  elements.activeCategoryEn.textContent = state.language === "zh" ? category.name : category.englishName.toLocaleUpperCase("en");
+  if (elements.activeCategoryEn) {
+    elements.activeCategoryEn.textContent = state.language === "en" ? category.name : category.englishName;
+  }
   elements.resultCount.textContent = results.length.toLocaleString("zh-CN");
   if (elements.selectAllCount) elements.selectAllCount.textContent = results.length.toLocaleString("zh-CN");
   if (elements.selectedCount) elements.selectedCount.textContent = state.staged.length.toLocaleString("zh-CN");
