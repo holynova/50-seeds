@@ -88,7 +88,6 @@ const state = {
     mode: "double",
     categoryA: "films",
     categoryB: "lighting_setups",
-    focusedSource: "a",
     categoryFilter: "",
     dimension: "all",
     categorySearch: { a: "", b: "" },
@@ -618,6 +617,20 @@ function renderComboCategoryList({ preserveScroll = true } = {}) {
     : DIMENSIONS.filter((d) => d.key === activeDim);
 
   let html = "";
+  if (!query && activeDim === "all") {
+    html += `
+      <div class="category-master-item">
+        <button type="button" class="category-button is-master${state.category === "all" ? " is-active" : ""}" data-category="all" aria-pressed="${state.category === "all"}">
+          <span>
+            <b><span class="master-badge" aria-hidden="true">${ICONS.all}</span>全部种子</b>
+            <small lang="en">All ${state.data.meta.categoryCount} Categories</small>
+          </span>
+          <em>${state.data.meta.seedCount.toLocaleString("zh-CN")}</em>
+        </button>
+      </div>
+    `;
+  }
+
   for (const dim of dimensionsToRender) {
     const catsInDim = filtered.filter((cat) => dim.ids.includes(cat.id));
     if (!catsInDim.length) continue;
@@ -634,15 +647,14 @@ function renderComboCategoryList({ preserveScroll = true } = {}) {
         </div>
         <div class="category-group-list">
           ${catsInDim.map((category) => {
-            const isA = state.combo.categoryA === category.id;
-            const isB = state.combo.mode === "double" && state.combo.categoryB === category.id;
+            const isActive = state.category === category.id;
             return `
-              <button type="button" class="category-button${isA || isB ? " is-active" : ""}" data-combo-category="${category.id}" aria-label="将 ${escapeHtml(category.name)} 设置为分类 ${state.combo.focusedSource.toLocaleUpperCase()}">
+              <button type="button" class="category-button${isActive ? " is-active" : ""}" data-category="${escapeHtml(category.id)}" aria-pressed="${isActive}">
                 <span>
                   <b><i class="dimension-dot" style="--dim-color: ${dim.color}" title="${dim.label}"></i>${escapeHtml(category.name)}</b>
                   <small lang="en">${escapeHtml(category.englishName)}</small>
                 </span>
-                <em>${isA ? "A" : isB ? "B" : category.count}</em>
+                <em>${category.count}</em>
               </button>
             `;
           }).join("")}
@@ -755,20 +767,7 @@ function toggleCategoryPicker(slot) {
   if (state.combo.openPicker === slot) elements.categoryPickers[slot].search.focus();
 }
 
-function setFocusedSource(slot) {
-  state.combo.focusedSource = slot;
-  renderSourceFocus();
-  renderComboCategoryList();
-}
 
-function renderSourceFocus() {
-  document.querySelectorAll(".combo-source").forEach((source) => {
-    const focused = source.dataset.source === state.combo.focusedSource;
-    source.classList.toggle("is-focused", focused);
-    const button = source.querySelector("[data-focus-source]");
-    button.textContent = focused ? "正在编辑" : "编辑这一侧";
-  });
-}
 
 function renderPinOptions(slot) {
   const category = comboCategory(slot);
@@ -923,21 +922,10 @@ function setComboCategory(slot, categoryId) {
   state.combo.pinSearch[slot] = "";
   state.combo.categorySearch[slot] = "";
   state.combo.categorySort[slot] = "default";
-  document.querySelector(`#pin-search-${slot}`).value = "";
+  const pinInput = document.querySelector(`#pin-search-${slot}`);
+  if (pinInput) pinInput.value = "";
   closeCategoryPickers();
-
-  // In-place button updates: rock solid, 0 scroll jump
-  elements.comboCategoryList.querySelectorAll("[data-combo-category]").forEach((btn) => {
-    const catId = btn.dataset.comboCategory;
-    const isA = state.combo.categoryA === catId;
-    const isB = state.combo.mode === "double" && state.combo.categoryB === catId;
-    btn.classList.toggle("is-active", isA || isB);
-    const em = btn.querySelector("em");
-    if (em) {
-      em.textContent = isA ? "A" : isB ? "B" : (categoryById(catId)?.count || "50");
-    }
-  });
-
+  renderCategoryPickers();
   renderPinned(slot);
   renderCombinationMath();
   shuffleResults({ announce: false });
@@ -1051,7 +1039,9 @@ function bindLibraryEvents() {
     const tabBtn = event.target.closest("[data-dimension-tab]");
     if (!tabBtn) return;
     state.dimension = tabBtn.dataset.dimensionTab;
+    state.combo.dimension = tabBtn.dataset.dimensionTab;
     renderCategories();
+    renderComboCategoryList();
   });
 
   elements.categoryFilter?.addEventListener("input", (event) => {
@@ -1075,7 +1065,7 @@ function bindLibraryEvents() {
     state.visible = pageSize;
 
     // In-place button updates: completely avoids sidebar jumping or scroll shifting
-    elements.categoryList.querySelectorAll(".category-button").forEach((btn) => {
+    document.querySelectorAll(".category-list .category-button").forEach((btn) => {
       const isActive = btn.dataset.category === newCategory;
       btn.classList.toggle("is-active", isActive);
       btn.setAttribute("aria-pressed", String(isActive));
@@ -1155,7 +1145,9 @@ function bindComboEvents() {
   elements.comboDimensionTabs?.addEventListener("click", (event) => {
     const tabBtn = event.target.closest("[data-combo-dimension-tab]");
     if (!tabBtn) return;
+    state.dimension = tabBtn.dataset.comboDimensionTab;
     state.combo.dimension = tabBtn.dataset.comboDimensionTab;
+    renderCategories();
     renderComboCategoryList();
   });
 
@@ -1172,12 +1164,22 @@ function bindComboEvents() {
   });
 
   document.querySelectorAll("[data-view]").forEach((button) => button.addEventListener("click", () => setView(button.dataset.view)));
-  document.querySelectorAll("[data-focus-source]").forEach((button) => button.addEventListener("click", () => {
-    setFocusedSource(button.dataset.focusSource);
-  }));
+  
   elements.comboCategoryList.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-combo-category]");
-    if (button) setComboCategory(state.combo.focusedSource, button.dataset.comboCategory);
+    const button = event.target.closest("[data-category]");
+    if (!button) return;
+    const newCategory = button.dataset.category;
+    state.category = newCategory;
+    state.visible = pageSize;
+
+    document.querySelectorAll(".category-list .category-button").forEach((btn) => {
+      const isActive = btn.dataset.category === newCategory;
+      btn.classList.toggle("is-active", isActive);
+      btn.setAttribute("aria-pressed", String(isActive));
+    });
+
+    setView("library");
+    renderResults();
   });
 
   for (const slot of ["a", "b"]) {
@@ -1398,7 +1400,6 @@ async function initialize() {
     renderResults({ announce: false });
     renderCategoryPickers();
     renderComboCategoryList();
-    renderSourceFocus();
     renderPinned("a");
     renderPinned("b");
     renderCombinationMath();

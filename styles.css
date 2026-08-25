@@ -335,8 +335,8 @@ h1, h2, h3, p { margin-top: 0; }
 .dimension-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin: 6px 0 10px;
+  gap: 5px;
+  margin: 8px 0 12px;
   flex-shrink: 0;
 }
 
@@ -344,10 +344,10 @@ h1, h2, h3, p { margin-top: 0; }
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  min-height: 26px;
-  padding: 2px 8px;
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-pill);
+  min-height: 28px;
+  padding: 3px 8px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-xs);
   background: var(--surface);
   color: var(--muted);
   font-size: 11px;
@@ -373,11 +373,12 @@ h1, h2, h3, p { margin-top: 0; }
   color: var(--faint);
   font-size: 9.5px;
   font-variant-numeric: tabular-nums;
+  margin-left: 1px;
 }
 
 .dimension-tab-btn:hover {
   color: var(--paper);
-  border-color: var(--accent);
+  border-color: var(--tab-color, var(--accent));
   background: var(--surface-raised);
 }
 
@@ -393,8 +394,10 @@ h1, h2, h3, p { margin-top: 0; }
 }
 
 .dimension-tab-btn.is-active small {
+  background: color-mix(in oklch, var(--accent-ink) 22%, transparent);
   color: var(--accent-ink);
-  opacity: 0.85;
+  padding: 1px 4px;
+  border-radius: var(--radius-pill);
 }
 
 /* Master Category Card (All Seeds) */
@@ -783,12 +786,6 @@ footer div { display: flex; gap: 20px; }
   overscroll-behavior: contain;
 }
 
-.category-help {
-  margin: 10px 0 2px;
-  color: var(--faint);
-  font-size: 10px;
-  flex-shrink: 0;
-}
 .combo-stage { min-width: 0; }
 .combo-intro { padding: 2px 0 16px; border-bottom: 1px solid var(--hairline-strong); }
 .combo-intro h1 {
@@ -811,14 +808,12 @@ footer div { display: flex; gap: 20px; }
   min-width: 0;
   position: relative;
   padding: 12px 14px;
-  border: 1px solid var(--hairline);
-  border-top: 2px solid transparent;
+  border: 1px solid var(--hairline-strong);
   border-radius: var(--radius-xs);
   background: var(--surface);
   transition: opacity 160ms ease, border-color 160ms ease;
 }
 
-.combo-source.is-focused { border-top-color: var(--accent); }
 .combo-source.is-disabled { opacity: .34; pointer-events: none; }
 .combo-source:focus-within { z-index: 30; }
 .source-heading, .source-heading > div, .pin-summary { display: flex; align-items: center; }
@@ -826,8 +821,6 @@ footer div { display: flex; gap: 20px; }
 .source-heading > div { gap: 8px; }
 .source-heading b { color: var(--accent); font: 750 14px/1 var(--font-display); }
 .source-heading span { color: var(--faint); font-size: 10px; }
-.text-button { padding: 0; border: 0; background: transparent; color: var(--faint); font-size: 10px; cursor: pointer; }
-.combo-source.is-focused .text-button { color: var(--paper); }
 
 .category-picker { position: relative; }
 .picker-trigger {
@@ -844,13 +837,29 @@ footer div { display: flex; gap: 20px; }
   color: var(--paper);
   text-align: left;
   cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
 }
-.picker-trigger:disabled { cursor: not-allowed; }
+.picker-trigger:hover { border-color: var(--accent); }
+.picker-trigger:disabled { cursor: not-allowed; opacity: 0.5; }
 .picker-trigger[aria-expanded="true"] { border-color: var(--accent); }
 .picker-current { min-width: 0; display: grid; gap: 3px; }
 .picker-current strong { overflow-wrap: anywhere; font-size: 13px; line-height: 1.1; }
 .picker-current span { overflow-wrap: anywhere; color: var(--muted); font-size: 10px; line-height: 1.15; }
-.picker-caret { flex: 0 0 auto; color: var(--accent); font: 700 9px/1 var(--font-display); letter-spacing: .08em; }
+.picker-caret {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  color: var(--accent);
+  line-height: 1;
+  transition: transform 150ms ease;
+}
+.picker-caret svg {
+  display: block;
+}
+.picker-trigger[aria-expanded="true"] .picker-caret {
+  transform: rotate(180deg);
+}
 .picker-menu {
   position: absolute;
   z-index: 40;

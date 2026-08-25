@@ -55,15 +55,14 @@
             <h2 id="combo-category-heading">分类索引</h2>
             <span id="combo-category-counter">50</span>
           </div>
-          <p class="category-help">点击分类，设置当前编辑的一侧。</p>
           <div class="category-filter">
-            <label class="visually-hidden" for="combo-category-filter">筛选组合分类</label>
+            <label class="visually-hidden" for="combo-category-filter">筛选分类</label>
             <span class="category-filter-icon" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
             <input id="combo-category-filter" type="search" placeholder="快速筛选分类…" autocomplete="off">
             <button id="combo-category-filter-clear" type="button" class="category-filter-clear" aria-label="清空筛选" hidden><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
           </div>
-          <div id="combo-dimension-tabs" class="dimension-tabs" role="tablist" aria-label="组合分类维度切换"></div>
-          <nav id="combo-category-list" class="category-list" aria-label="组合分类索引"></nav>
+          <div id="combo-dimension-tabs" class="dimension-tabs" role="tablist" aria-label="分类维度切换"></div>
+          <nav id="combo-category-list" class="category-list" aria-label="分类索引"></nav>
         </aside>
 
         <div class="combo-stage">
@@ -73,14 +72,13 @@
           </div>
 
           <div class="combo-controls" aria-label="组合设置">
-            <section class="combo-source is-focused" data-source="a" aria-labelledby="source-a-title">
+            <section class="combo-source" data-source="a" aria-labelledby="source-a-title">
               <div class="source-heading">
                 <div><b id="source-a-title">分类 A</b><span>必选</span></div>
-                <button type="button" class="text-button" data-focus-source="a">正在编辑</button>
               </div>
               <div class="category-picker" data-picker-slot="a">
                 <button id="combo-picker-trigger-a" class="picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="combo-picker-menu-a">
-                  <span class="picker-current" id="combo-picker-current-a"></span><span class="picker-caret" aria-hidden="true">OPEN</span>
+                  <span class="picker-current" id="combo-picker-current-a"></span><span class="picker-caret" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
                 </button>
                 <div id="combo-picker-menu-a" class="picker-menu" hidden>
                   <div class="picker-toolbar">
@@ -108,11 +106,10 @@
             <section class="combo-source" data-source="b" aria-labelledby="source-b-title">
               <div class="source-heading">
                 <div><b id="source-b-title">分类 B</b><span>可选</span></div>
-                <button type="button" class="text-button" data-focus-source="b">编辑这一侧</button>
               </div>
               <div class="category-picker" data-picker-slot="b">
                 <button id="combo-picker-trigger-b" class="picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="combo-picker-menu-b">
-                  <span class="picker-current" id="combo-picker-current-b"></span><span class="picker-caret" aria-hidden="true">OPEN</span>
+                  <span class="picker-current" id="combo-picker-current-b"></span><span class="picker-caret" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
                 </button>
                 <div id="combo-picker-menu-b" class="picker-menu" hidden>
                   <div class="picker-toolbar">
