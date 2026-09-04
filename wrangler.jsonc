@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "50-seeds",
+  "compatibility_date": "2026-09-04",
+  "workers_dev": false,
+  "assets": {
+    "directory": "."
+  },
+  "routes": [
+    {
+      "pattern": "50-seeds.xiaosang.cc",
+      "custom_domain": true
+    }
+  ]
+}
