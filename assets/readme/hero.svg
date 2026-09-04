@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="100%" height="100%">
+  <title>50 Seeds · AI 视觉基因种子库 - 50 Seeds AI Reference Matrix</title>
+  <defs>
+    <linearGradient id="bgGrad_50-seeds" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B0E17"/>
+      <stop offset="100%" stop-color="#04060A"/>
+    </linearGradient>
+    <linearGradient id="primaryGrad_50-seeds" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1200" height="420" rx="16" fill="url(#bgGrad_50-seeds)" stroke="#1E293B" stroke-width="1.5"/>
+
+  <!-- Left Content Block -->
+  <g transform="translate(60, 50)">
+    <!-- Category Pill -->
+    <rect x="0" y="0" width="390" height="28" rx="14" fill="#6366F1" opacity="0.15"/>
+    <text x="14" y="19" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#6366F1" letter-spacing="1.5">PARAMETRIC VISUAL GENE &amp; GENERATIVE BENCHMARK</text>
+
+    <!-- Main Title (Chinese) -->
+    <text x="0" y="85" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif" font-size="40" font-weight="900" fill="#F8FAFC" letter-spacing="-0.5">
+      50 Seeds · AI 视觉基因种子库
+    </text>
+
+    <!-- Subtitle (English & Value Proposition) -->
+    <text x="0" y="125" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700" fill="#10B981" letter-spacing="0.5">
+      50 Seeds AI Reference Matrix
+    </text>
+
+    <!-- Tagline Description -->
+    <text x="0" y="170" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', sans-serif" font-size="16" font-weight="500" fill="#94A3B8">
+      24 个主流视觉大类 × 50 组精炼 Seed 参数与中英双语作图基因库
+    </text>
+
+    <!-- Key Spec Badge Array -->
+    <g transform="translate(0, 225)">
+      <!-- Badge 1 -->
+      <rect x="0" y="0" width="581" height="38" rx="8" fill="#1E2430" stroke="#1E293B" stroke-width="1"/>
+      <circle cx="18" cy="19" r="4" fill="#6366F1"/>
+      <text x="32" y="24" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#F8FAFC">24 CATEGORIES · 50 SEEDS MATRIX · DUAL LANGUAGE &amp; SEED LOCK</text>
+    </g>
+
+    <!-- Navigation / Quick action badges -->
+    <g transform="translate(0, 285)">
+      <rect x="0" y="0" width="135" height="34" rx="17" fill="#6366F1"/>
+      <text x="67" y="22" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="800" fill="#FFFFFF" letter-spacing="0.5">TRY LIVE DEMO</text>
+
+      <rect x="145" y="0" width="125" height="34" rx="17" fill="#1E293B" stroke="#1E293B" stroke-width="1"/>
+      <text x="207" y="22" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#94A3B8">GITHUB REPO</text>
+    </g>
+  </g>
+
+  <!-- Right Visual Specimen Motif -->
+  
+        <!-- 50 Seeds Matrix Visual -->
+        <g transform="translate(740, 45)">
+          <rect x="0" y="0" width="380" height="310" rx="14" fill="#0C101A" stroke="#1E293B" stroke-width="1.5"/>
+          
+          <!-- Seed Cards Cluster -->
+          <g transform="translate(25, 25)">
+            <!-- Top Card (Active) -->
+            <rect x="0" y="0" width="330" height="85" rx="8" fill="#161E2E" stroke="#6366F1" stroke-width="2"/>
+            <rect x="15" y="15" width="70" height="24" rx="4" fill="#6366F1"/>
+            <text x="50" y="32" text-anchor="middle" font-family="system-ui, monospace" font-size="11" font-weight="900" fill="#FFFFFF">SEED #42</text>
+            <text x="100" y="32" font-family="system-ui, sans-serif" font-size="12" font-weight="800" fill="#F8FAFC">CYBERPUNK NEON NOIR</text>
+            <text x="15" y="62" font-family="system-ui, monospace" font-size="10" font-weight="600" fill="#10B981">--seed 20260904 --c 15 --s 750</text>
+            <rect x="260" y="50" width="55" height="22" rx="4" fill="#10B981" opacity="0.2"/>
+            <text x="287" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" font-weight="800" fill="#10B981">LOCKED</text>
+
+            <!-- Middle Card -->
+            <rect x="0" y="95" width="330" height="75" rx="8" fill="#111622" stroke="#1E293B" stroke-width="1"/>
+            <rect x="15" y="110" width="70" height="22" rx="4" fill="#334155"/>
+            <text x="50" y="125" text-anchor="middle" font-family="system-ui, monospace" font-size="10" font-weight="800" fill="#FFFFFF">SEED #19</text>
+            <text x="100" y="126" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#94A3B8">MINIMALIST CERAMICS</text>
+            <text x="15" y="152" font-family="system-ui, monospace" font-size="10" font-weight="600" fill="#94A3B8">--seed 88481234 --s 250</text>
+
+            <!-- Bottom Stats Bar -->
+            <rect x="0" y="185" width="330" height="60" rx="8" fill="#0E131F" stroke="#1E293B" stroke-width="1"/>
+            <text x="165" y="210" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="800" fill="#F8FAFC">24 CATEGORIES × 50 REPRODUCIBLE SEEDS</text>
+            <text x="165" y="230" text-anchor="middle" font-family="system-ui, monospace" font-size="10" font-weight="700" fill="#6366F1">ZERO-HALLUCINATION VISUAL GENE BENCHMARK</text>
+          </g>
+        </g>
+        
+</svg>
