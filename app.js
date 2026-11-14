@@ -692,7 +692,7 @@ function renderCategoryPicker(slot) {
   picker.root.classList.toggle("is-open", isOpen);
   picker.trigger.setAttribute("aria-expanded", String(isOpen));
   picker.trigger.disabled = slot === "b" && state.combo.mode === "single";
-  picker.current.innerHTML = `<strong>${escapeHtml(selected.name)}</strong><span>${escapeHtml(selected.englishName)} · ${selected.count}</span>`;
+  picker.current.innerHTML = `<strong>${escapeHtml(selected.name)}</strong><span>${escapeHtml(selected.englishName)} / ${selected.count} 项</span>`;
   picker.menu.hidden = !isOpen;
   picker.search.value = state.combo.categorySearch[slot];
   
@@ -718,7 +718,7 @@ function renderCategoryPicker(slot) {
                 <button type="button" class="picker-option${isSelected ? " is-selected" : ""}" data-picker-slot="${slot}" data-picker-category="${category.id}" role="option" aria-selected="${isSelected}">
                   <span>
                     <b><i class="dimension-dot" style="--dim-color: ${dim.color}"></i>${escapeHtml(category.name)}</b>
-                    <small>${escapeHtml(category.englishName)} · ${category.id}</small>
+                    <small>${escapeHtml(category.englishName)} / ${category.id}</small>
                   </span>
                   <em>${isSelected ? "当前" : isOtherSide ? "另一侧" : `${category.count} 项`}</em>
                 </button>
@@ -737,7 +737,7 @@ function renderCategoryPicker(slot) {
         <button type="button" class="picker-option${isSelected ? " is-selected" : ""}" data-picker-slot="${slot}" data-picker-category="${category.id}" role="option" aria-selected="${isSelected}">
           <span>
             <b><i class="dimension-dot" style="--dim-color: ${dim.color}" title="${dim.label}"></i>${escapeHtml(category.name)}</b>
-            <small>${escapeHtml(category.englishName)} · ${category.id}</small>
+            <small>${escapeHtml(category.englishName)} / ${category.id}</small>
           </span>
           <em>${isSelected ? "当前" : isOtherSide ? "另一侧" : `${category.count} 项`}</em>
         </button>
@@ -878,6 +878,11 @@ function saveFavorites() {
 
 function renderFavorites() {
   elements.favoriteCount.textContent = state.combo.favorites.length;
+  const hasFavorites = state.combo.favorites.length > 0;
+  for (const id of ["copy-favorites", "export-favorites", "clear-favorites"]) {
+    const button = document.querySelector(`#${id}`);
+    if (button) button.disabled = !hasFavorites;
+  }
   elements.favoriteList.innerHTML = state.combo.favorites.length
     ? state.combo.favorites.map((combination) => `
       <div class="favorite-chip">
@@ -1260,6 +1265,8 @@ function bindComboEvents() {
   document.querySelector("#copy-favorites").addEventListener("click", () => copyText(combinationsText(state.combo.favorites, state.language, state.combo.promptFormat), `已复制 ${state.combo.favorites.length} 组收藏`));
   document.querySelector("#export-favorites").addEventListener("click", () => downloadJson("50-seeds-favorites.json", state.combo.favorites));
   document.querySelector("#clear-favorites").addEventListener("click", () => {
+    if (!state.combo.favorites.length) return;
+    if (!window.confirm("确定要清空全部收藏吗？此操作无法撤销。")) return;
     state.combo.favorites = [];
     saveFavorites();
     renderFavorites();

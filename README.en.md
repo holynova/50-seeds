@@ -25,14 +25,14 @@
 
 ## What It Is
 
-A parametric reference matrix for AI artists and designers. Covers 24 mainstream design and art categories (portraiture, cyberpunk cityscapes, architectural interiors, product macro, etc.), providing 50 verified, high-consistency visual seeds and prompt pairings per category to eliminate randomness and lock in distinctive aesthetics.
+A parametric reference matrix for AI artists and designers. Covers 51 mainstream design and art categories (portraiture, cyberpunk cityscapes, architectural interiors, product macro, etc.), providing 50 verified, high-consistency visual seeds and prompt pairings per category to eliminate randomness and lock in distinctive aesthetics.
 
 ---
 
 ## Why It Matters (Key Features)
 
 - **Aesthetic Locking & Determinism**: Catalogs tested seeds that reliably produce cohesive lighting, composition, and color grading across iterations.
-- **24 Mainstream Design Categories**: Covers 3D rendering, vintage photography, architectural spatial studies, product still life, and typography.
+- **51 Mainstream Design Categories**: Covers 3D rendering, vintage photography, architectural spatial studies, product still life, and typography.
 - **Bilingual Structured Prompt Recipes**: Instant one-click clipboard copying of English/Chinese prompts and exact seed numbers.
 - **Lightweight High-Contrast Card Matrix**: Instant day/night theme switching optimized for mobile and desktop quick search.
 
@@ -40,7 +40,7 @@ A parametric reference matrix for AI artists and designers. Covers 24 mainstream
 
 ## Inventory & Scope
 
-24 professional categories, 50 verified seed sets per category, bilingual keywords, day/night themes, offline viewing.
+51 professional categories, 2,550 verified seeds, bilingual keywords, day/night themes, offline viewing.
 
 ---
 
