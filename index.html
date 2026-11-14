@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta id="theme-color" name="theme-color" content="#211d19">
-    <meta name="description" content="50 类、2,500 条 AI 作图热门视觉种子，支持搜索、筛选、复制与 JSON 下载。">
-    <meta property="og:title" content="50 Seeds · AI 作图视觉种子库">
-    <meta property="og:description" content="每类 50 条，50 类共 2,500 条热门视觉种子。">
+    <meta name="description" content="51 类、2,550 条 AI 作图热门视觉种子，支持搜索、筛选、复制与 JSON 下载。">
+    <meta property="og:title" content="50 Seeds — AI 作图视觉种子库">
+    <meta property="og:description" content="每类 50 条，51 类共 2,550 条热门视觉种子。">
     <meta property="og:type" content="website">
-    <title>50 Seeds · AI 作图视觉种子库</title>
+    <title>50 Seeds — AI 作图视觉种子库</title>
     <script
       defer
       src="https://cloud.umami.is/script.js"
@@ -22,7 +22,7 @@
         if (localStorage.getItem("50-seeds-theme") === "light") document.documentElement.dataset.theme = "light";
       } catch {}
     </script>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23100d0b'/%3E%3Ctext x='8' y='47' font-size='42' font-family='Arial' font-weight='800' fill='%23f35432'%3E50%3C/text%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23100d0b'/%3E%3Ctext x='8' y='47' font-size='42' font-family='Arial' font-weight='800' fill='%23e7566b'%3E50%3C/text%3E%3C/svg%3E">
     <link rel="stylesheet" href="./styles.css">
     <script type="module" src="./app.js"></script>
   </head>
@@ -43,7 +43,7 @@
           <span class="theme-toggle-label">日间模式</span>
         </button>
         <a class="repo-link" href="https://github.com/holynova/50-seeds" target="_blank" rel="noreferrer">
-          GitHub repo <span aria-hidden="true">↗</span>
+          GitHub 仓库 <span aria-hidden="true">↗</span>
         </a>
       </div>
     </header>
@@ -53,7 +53,7 @@
         <aside class="combo-category-panel" aria-labelledby="combo-category-heading">
           <div class="panel-heading">
             <h2 id="combo-category-heading">分类索引</h2>
-            <span id="combo-category-counter">50</span>
+            <span id="combo-category-counter">51</span>
           </div>
           <div class="category-filter">
             <label class="visually-hidden" for="combo-category-filter">筛选分类</label>
@@ -158,9 +158,9 @@
                 <div class="format-toggle" role="group" aria-label="提示词导出格式">
                   <button type="button" data-prompt-format="plus" class="is-active" title="格式：词条 A + 词条 B">A + B</button>
                   <button type="button" data-prompt-format="comma" title="格式：词条 A, 词条 B (适合 AI)">A, B</button>
-                  <button type="button" data-prompt-format="midjourney" title="格式：带 Midjourney 质量参数">MJ 预设</button>
+                  <button type="button" data-prompt-format="midjourney" title="格式：词条加风格后缀与 --v 6.0">MJ 预设</button>
                 </div>
-                <button id="copy-results" type="button">复制本轮 · 每行一组</button>
+                <button id="copy-results" type="button">复制本轮（每行一组）</button>
                 <button id="download-results" type="button">下载 JSON</button>
               </div>
             </div>
@@ -174,13 +174,13 @@
             </div>
             <label>数量
               <select id="batch-count">
-                <option value="20">20 组</option>
+                <option value="20" selected>20 组</option>
                 <option value="50">50 组</option>
                 <option value="100">100 组</option>
-                <option value="all" selected>全部可用组合</option>
+                <option value="all">全部可用组合</option>
               </select>
             </label>
-            <button id="batch-copy" type="button">生成并复制 · 每行一组</button>
+            <button id="batch-copy" type="button">生成并复制（每行一组）</button>
             <button id="batch-download" type="button">生成并下载 JSON</button>
           </section>
 
@@ -188,7 +188,7 @@
             <div class="favorites-heading">
               <h2 id="favorites-title">我的收藏 <span id="favorite-count">0</span></h2>
               <div>
-                <button id="copy-favorites" type="button">复制收藏 · 每行一组</button>
+                <button id="copy-favorites" type="button">复制收藏（每行一组）</button>
                 <button id="export-favorites" type="button">导出收藏 JSON</button>
                 <button id="clear-favorites" type="button" class="quiet-action">清空</button>
               </div>
@@ -203,7 +203,7 @@
         <aside class="category-panel" aria-labelledby="category-heading">
           <div class="panel-heading">
             <h2 id="category-heading">分类索引</h2>
-            <span id="category-counter">50</span>
+            <span id="category-counter">51</span>
           </div>
           <div class="category-filter">
             <label class="visually-hidden" for="category-filter">筛选分类</label>
@@ -245,17 +245,17 @@
             <div class="result-heading-title">
               <h2 id="active-category">全部种子</h2>
               <span class="active-category-subtitle" id="active-category-en" lang="en">All Categories</span>
-              <p class="result-sub"><strong id="result-count">0</strong> 条结果 · <span>点击卡片复制完整词</span></p>
+              <p class="result-sub"><strong id="result-count">0</strong> 条结果，<span>点击卡片复制完整词</span></p>
             </div>
             <div class="library-batch-bar" aria-label="快捷选择与复制">
               <div class="quick-select-group" role="group" aria-label="快速选择">
-                <button id="select-all-btn" type="button" class="batch-btn">全选当前 (<span id="select-all-count">50</span>)</button>
+                <button id="select-all-btn" type="button" class="batch-btn">全选当前 (<span id="select-all-count">2,550</span>)</button>
                 <button id="select-top-10-btn" type="button" class="batch-btn">选前 10 项</button>
                 <button id="clear-staged-btn" type="button" class="batch-btn quiet">清空已选 (<span id="selected-count">0</span>)</button>
               </div>
               <div class="quick-copy-group" role="group" aria-label="批量复制">
-                <button id="copy-selected-lines-btn" type="button" class="batch-btn highlight">复制已选 · 一行一个</button>
-                <button id="copy-all-lines-btn" type="button" class="batch-btn">复制全部 · 一行一个</button>
+                <button id="copy-selected-lines-btn" type="button" class="batch-btn highlight">复制已选（一行一个）</button>
+                <button id="copy-all-lines-btn" type="button" class="batch-btn">复制全部（一行一个）</button>
               </div>
             </div>
           </div>
@@ -291,8 +291,8 @@
     </main>
 
     <footer>
-      <p>50 Seeds · Built for image makers.</p>
-      <div><a href="./data/seeds.json">Raw JSON</a><a href="https://github.com/holynova/50-seeds">GitHub</a></div>
+      <p>50 Seeds，为作图的人而做。</p>
+      <div><a href="./data/seeds.json">JSON 原始数据</a><a href="https://github.com/holynova/50-seeds">GitHub</a></div>
     </footer>
 
     <button id="back-to-top" class="back-to-top" type="button" aria-label="回到顶部" hidden>

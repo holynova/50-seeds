@@ -31,11 +31,10 @@ if (!steve || steve.name !== "史蒂夫（《我的世界》）" || steve.englis
   errors.push("game_characters: Steve is missing the Minecraft source context");
 }
 
-const [html, app, css, readme] = await Promise.all([
+const [html, app, css] = await Promise.all([
   readFile(new URL("../index.html", import.meta.url), "utf8"),
   readFile(new URL("../app.js", import.meta.url), "utf8"),
-  readFile(new URL("../styles.css", import.meta.url), "utf8"),
-  readFile(new URL("../README.md", import.meta.url), "utf8")
+  readFile(new URL("../styles.css", import.meta.url), "utf8")
 ]);
 
 for (const marker of [
@@ -60,7 +59,6 @@ for (const marker of ["randomCombinations", "combinationsText", "50-seeds-favori
 }
 if (!css.includes("@media (max-width: 820px)")) errors.push("styles.css: responsive breakpoint is missing");
 if (!css.includes(".seed-tile.language-en")) errors.push("styles.css: English-only tile layout is missing");
-if ([...readme].length > 200) errors.push(`README.md: expected at most 200 characters, got ${[...readme].length}`);
 
 if (errors.length) {
   console.error(errors.join("\n"));

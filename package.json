@@ -1,8 +1,8 @@
 {
   "name": "50-seeds",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "private": true,
-  "description": "50 categories of popular visual seeds for AI image creation",
+  "description": "51 categories of popular visual seeds for AI image creation",
   "type": "module",
   "scripts": {
     "generate": "node scripts/generate-data.mjs",
