@@ -1,87 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="100%" height="100%">
-  <title>50 Seeds · AI 视觉基因种子库 - 50 Seeds AI Reference Matrix</title>
-  <defs>
-    <linearGradient id="bgGrad_50-seeds" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0B0E17"/>
-      <stop offset="100%" stop-color="#04060A"/>
-    </linearGradient>
-    <linearGradient id="primaryGrad_50-seeds" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#6366F1"/>
-      <stop offset="100%" stop-color="#10B981"/>
-    </linearGradient>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="360" viewBox="0 0 1200 360"
+     role="img" aria-labelledby="title desc">
+  <title id="title">50 Seeds — AI 作图热门视觉种子库</title>
+  <desc id="desc">暖黑底标题：50 Seeds，51 类 × 50 条 = 2,550 条热门视觉种子；右侧是双词条组合示意，电影分类与灯光方案分类各抽一条，拼成一组提示词灵感。</desc>
 
-  <!-- Background Canvas -->
-  <rect width="1200" height="420" rx="16" fill="url(#bgGrad_50-seeds)" stroke="#1E293B" stroke-width="1.5"/>
+  <rect width="1200" height="360" rx="26" fill="#171310"/>
 
-  <!-- Left Content Block -->
-  <g transform="translate(60, 50)">
-    <!-- Category Pill -->
-    <rect x="0" y="0" width="390" height="28" rx="14" fill="#6366F1" opacity="0.15"/>
-    <text x="14" y="19" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#6366F1" letter-spacing="1.5">PARAMETRIC VISUAL GENE &amp; GENERATIVE BENCHMARK</text>
+  <g id="dots" fill="#2a211a">
+    <circle cx="700" cy="40" r="3"/><circle cx="740" cy="40" r="3"/><circle cx="700" cy="80" r="3"/><circle cx="740" cy="80" r="3"/>
+    <circle cx="700" cy="320" r="3"/><circle cx="740" cy="320" r="3"/><circle cx="700" cy="280" r="3"/><circle cx="740" cy="280" r="3"/>
+  </g>
 
-    <!-- Main Title (Chinese) -->
-    <text x="0" y="85" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif" font-size="40" font-weight="900" fill="#F8FAFC" letter-spacing="-0.5">
-      50 Seeds · AI 视觉基因种子库
-    </text>
-
-    <!-- Subtitle (English & Value Proposition) -->
-    <text x="0" y="125" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700" fill="#10B981" letter-spacing="0.5">
-      50 Seeds AI Reference Matrix
-    </text>
-
-    <!-- Tagline Description -->
-    <text x="0" y="170" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', sans-serif" font-size="16" font-weight="500" fill="#94A3B8">
-      24 个主流视觉大类 × 50 组精炼 Seed 参数与中英双语作图基因库
-    </text>
-
-    <!-- Key Spec Badge Array -->
-    <g transform="translate(0, 225)">
-      <!-- Badge 1 -->
-      <rect x="0" y="0" width="581" height="38" rx="8" fill="#1E2430" stroke="#1E293B" stroke-width="1"/>
-      <circle cx="18" cy="19" r="4" fill="#6366F1"/>
-      <text x="32" y="24" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#F8FAFC">24 CATEGORIES · 50 SEEDS MATRIX · DUAL LANGUAGE &amp; SEED LOCK</text>
-    </g>
-
-    <!-- Navigation / Quick action badges -->
-    <g transform="translate(0, 285)">
-      <rect x="0" y="0" width="135" height="34" rx="17" fill="#6366F1"/>
-      <text x="67" y="22" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="800" fill="#FFFFFF" letter-spacing="0.5">TRY LIVE DEMO</text>
-
-      <rect x="145" y="0" width="125" height="34" rx="17" fill="#1E293B" stroke="#1E293B" stroke-width="1"/>
-      <text x="207" y="22" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#94A3B8">GITHUB REPO</text>
+  <g id="title-block" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <text x="56" y="62" font-size="19" letter-spacing="3" fill="#c98a6b">AI 作图视觉种子库 · VISUAL SEED LIBRARY</text>
+    <text x="56" y="130" font-size="64" font-weight="700" fill="#f5efe8">50 Seeds</text>
+    <text x="56" y="170" font-size="23" fill="#ff5a3c">51 类 × 50 条 = 2,550 条热门视觉种子</text>
+    <text x="56" y="204" font-size="19" fill="#b8a89a">中英双语，带排名与风格描述，复制即用。</text>
+    <g id="chips" font-size="18" fill="#f5efe8" text-anchor="middle">
+      <g><rect x="56" y="238" width="126" height="36" rx="18" fill="#241c16" stroke="#3a2d22" stroke-width="1.5"/><text x="119" y="262">51 个分类</text></g>
+      <g><rect x="194" y="238" width="162" height="36" rx="18" fill="#241c16" stroke="#3a2d22" stroke-width="1.5"/><text x="275" y="262">2,550 条种子</text></g>
+      <g><rect x="368" y="238" width="180" height="36" rx="18" fill="#241c16" stroke="#3a2d22" stroke-width="1.5"/><text x="458" y="262">双词条组合摇号</text></g>
+      <g><rect x="560" y="238" width="126" height="36" rx="18" fill="#241c16" stroke="#3a2d22" stroke-width="1.5"/><text x="623" y="262">中英双语</text></g>
     </g>
   </g>
 
-  <!-- Right Visual Specimen Motif -->
-  
-        <!-- 50 Seeds Matrix Visual -->
-        <g transform="translate(740, 45)">
-          <rect x="0" y="0" width="380" height="310" rx="14" fill="#0C101A" stroke="#1E293B" stroke-width="1.5"/>
-          
-          <!-- Seed Cards Cluster -->
-          <g transform="translate(25, 25)">
-            <!-- Top Card (Active) -->
-            <rect x="0" y="0" width="330" height="85" rx="8" fill="#161E2E" stroke="#6366F1" stroke-width="2"/>
-            <rect x="15" y="15" width="70" height="24" rx="4" fill="#6366F1"/>
-            <text x="50" y="32" text-anchor="middle" font-family="system-ui, monospace" font-size="11" font-weight="900" fill="#FFFFFF">SEED #42</text>
-            <text x="100" y="32" font-family="system-ui, sans-serif" font-size="12" font-weight="800" fill="#F8FAFC">CYBERPUNK NEON NOIR</text>
-            <text x="15" y="62" font-family="system-ui, monospace" font-size="10" font-weight="600" fill="#10B981">--seed 20260904 --c 15 --s 750</text>
-            <rect x="260" y="50" width="55" height="22" rx="4" fill="#10B981" opacity="0.2"/>
-            <text x="287" y="65" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" font-weight="800" fill="#10B981">LOCKED</text>
-
-            <!-- Middle Card -->
-            <rect x="0" y="95" width="330" height="75" rx="8" fill="#111622" stroke="#1E293B" stroke-width="1"/>
-            <rect x="15" y="110" width="70" height="22" rx="4" fill="#334155"/>
-            <text x="50" y="125" text-anchor="middle" font-family="system-ui, monospace" font-size="10" font-weight="800" fill="#FFFFFF">SEED #19</text>
-            <text x="100" y="126" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#94A3B8">MINIMALIST CERAMICS</text>
-            <text x="15" y="152" font-family="system-ui, monospace" font-size="10" font-weight="600" fill="#94A3B8">--seed 88481234 --s 250</text>
-
-            <!-- Bottom Stats Bar -->
-            <rect x="0" y="185" width="330" height="60" rx="8" fill="#0E131F" stroke="#1E293B" stroke-width="1"/>
-            <text x="165" y="210" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="800" fill="#F8FAFC">24 CATEGORIES × 50 REPRODUCIBLE SEEDS</text>
-            <text x="165" y="230" text-anchor="middle" font-family="system-ui, monospace" font-size="10" font-weight="700" fill="#6366F1">ZERO-HALLUCINATION VISUAL GENE BENCHMARK</text>
-          </g>
-        </g>
-        
+  <g id="combo-diagram" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <text x="800" y="46" font-size="18" fill="#b8a89a">双词条组合 · 各抽一条拼灵感</text>
+    <g id="card-a">
+      <rect x="800" y="62" width="160" height="96" rx="14" fill="#241c16" stroke="#3a2d22" stroke-width="1.5"/>
+      <path d="M806 65 h148" stroke="#ff5a3c" stroke-width="6" stroke-linecap="round"/>
+      <text x="820" y="104" font-size="22" font-weight="700" fill="#f5efe8">电影</text>
+      <text x="820" y="132" font-size="18" fill="#b8a89a">Films · 50</text>
+    </g>
+    <text x="972" y="122" font-size="30" font-weight="700" fill="#ff5a3c" text-anchor="middle">+</text>
+    <g id="card-b">
+      <rect x="1000" y="62" width="160" height="96" rx="14" fill="#241c16" stroke="#3a2d22" stroke-width="1.5"/>
+      <path d="M1006 65 h148" stroke="#ff5a3c" stroke-width="6" stroke-linecap="round"/>
+      <text x="1020" y="104" font-size="22" font-weight="700" fill="#f5efe8">灯光方案</text>
+      <text x="1020" y="132" font-size="18" fill="#b8a89a">Lighting · 50</text>
+    </g>
+    <g id="combo-math" text-anchor="middle">
+      <text x="980" y="212" font-size="26" font-weight="700" fill="#f5efe8">50 × 50 = <tspan fill="#ff5a3c">2,500</tspan> 种组合</text>
+    </g>
+    <g id="combo-example">
+      <rect x="800" y="238" width="360" height="72" rx="14" fill="#241c16" stroke="#3a2d22" stroke-width="1.5"/>
+      <text x="824" y="268" font-size="19" fill="#f5efe8">爱乐之城 <tspan fill="#ff5a3c">+</tspan> 斑驳树影光</text>
+      <text x="824" y="294" font-size="18" fill="#b8a89a">La La Land + Dappled Light</text>
+    </g>
+  </g>
 </svg>
